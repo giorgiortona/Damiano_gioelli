@@ -125,11 +125,22 @@ export default function Home() {
           },
         }));
 
-        gsap.to(".atelier-track", {
-          xPercent: -18,
-          ease: "none",
-          scrollTrigger: { trigger: ".atelier-gallery", start: "top bottom", end: "bottom top", scrub: 1 },
-        });
+        const atelierGallery = root.current?.querySelector<HTMLElement>(".atelier-gallery");
+        const atelierTrack = root.current?.querySelector<HTMLElement>(".atelier-track");
+
+        if (atelierGallery && atelierTrack) {
+          gsap.to(atelierTrack, {
+            x: () => -Math.max(0, atelierTrack.scrollWidth - atelierGallery.clientWidth),
+            ease: "none",
+            scrollTrigger: {
+              trigger: atelierGallery,
+              start: "top 82%",
+              end: "bottom 18%",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+        }
       });
 
       responsiveAnimations.add("(max-width: 900px)", () => {
