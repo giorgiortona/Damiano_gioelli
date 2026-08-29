@@ -8,7 +8,35 @@ export default function Home() {
   const root = useRef<HTMLElement>(null);
   const loader = useRef<HTMLDivElement>(null);
   const timeSection = useRef<HTMLElement>(null);
+  const timepieceAnimation = useRef<{ play: () => void; reverse: () => void } | null>(null);
   const [loaderDone, setLoaderDone] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [timepieceActive, setTimepieceActive] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("menu-open", mobileMenuOpen);
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.classList.remove("menu-open");
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileMenuOpen]);
+
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const toggleTimepiece = () => {
+    setTimepieceActive((isActive) => {
+      const nextState = !isActive;
+      if (nextState) timepieceAnimation.current?.play();
+      else timepieceAnimation.current?.reverse();
+      return nextState;
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -24,6 +52,7 @@ export default function Home() {
       gsap.registerPlugin(ScrollTrigger);
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+      const responsiveAnimations = gsap.matchMedia();
       const context = gsap.context(() => {
       if (reducedMotion) {
         setLoaderDone(true);
@@ -60,46 +89,64 @@ export default function Home() {
         });
       });
 
-      gsap.utils.toArray<HTMLImageElement>("[data-parallax]").forEach((image) => {
-        gsap.fromTo(
-          image,
-          { yPercent: -7 },
-          {
-            yPercent: 7,
-            ease: "none",
-            scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: 1 },
+      const composeTimepiece = (timeline: ReturnType<typeof gsap.timeline>) => {
+        timeline
+          .fromTo(".timepiece", { scale: 0.48, rotate: -45 }, { scale: 1, rotate: 28, duration: 1.35, ease: "power2.inOut" }, 0)
+          .fromTo(".timepiece-outer", { rotate: -90 }, { rotate: 300, duration: 1.6, ease: "power1.inOut" }, 0)
+          .fromTo(".timepiece-gem", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(49% at 50% 50%)", duration: 1.2, ease: "power2.inOut" }, 0.12)
+          .fromTo(".timepiece-hand--long", { rotate: -30 }, { rotate: 690, duration: 1.6, ease: "power1.inOut" }, 0)
+          .fromTo(".timepiece-hand--short", { rotate: 40 }, { rotate: 220, duration: 1.6, ease: "power1.inOut" }, 0)
+          .fromTo(".time-copy--left", { xPercent: -40, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .8, ease: "power2.out" }, 0.08)
+          .fromTo(".time-copy--right", { xPercent: 40, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .8, ease: "power2.out" }, 0.62)
+          .to(".timepiece-core", { boxShadow: "0 0 80px rgba(201,163,93,.38)", duration: .65, ease: "power2.inOut" }, 0.72);
+        return timeline;
+      };
+
+      responsiveAnimations.add("(min-width: 901px)", () => {
+        gsap.utils.toArray<HTMLImageElement>("[data-parallax]").forEach((image) => {
+          gsap.fromTo(
+            image,
+            { yPercent: -7 },
+            {
+              yPercent: 7,
+              ease: "none",
+              scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: 1 },
+            },
+          );
+        });
+
+        composeTimepiece(gsap.timeline({
+          scrollTrigger: {
+            trigger: timeSection.current,
+            start: "top top",
+            end: "+=230%",
+            pin: ".timepiece-stage",
+            scrub: 1.2,
           },
-        );
+        }));
+
+        gsap.to(".atelier-track", {
+          xPercent: -18,
+          ease: "none",
+          scrollTrigger: { trigger: ".atelier-gallery", start: "top bottom", end: "bottom top", scrub: 1 },
+        });
       });
 
-      const timeTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: timeSection.current,
-          start: "top top",
-          end: "+=230%",
-          pin: ".timepiece-stage",
-          scrub: 1.2,
-        },
-      });
+      responsiveAnimations.add("(max-width: 900px)", () => {
+        const mobileTimeline = composeTimepiece(gsap.timeline({ paused: true }));
+        timepieceAnimation.current = mobileTimeline;
 
-      timeTimeline
-        .fromTo(".timepiece", { scale: 0.48, rotate: -45 }, { scale: 1, rotate: 28, ease: "power2.inOut" }, 0)
-        .fromTo(".timepiece-outer", { rotate: -90 }, { rotate: 300, ease: "none" }, 0)
-        .fromTo(".timepiece-gem", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(49% at 50% 50%)", ease: "power2.inOut" }, 0.1)
-        .fromTo(".timepiece-hand--long", { rotate: -30 }, { rotate: 690, ease: "none" }, 0)
-        .fromTo(".timepiece-hand--short", { rotate: 40 }, { rotate: 220, ease: "none" }, 0)
-        .fromTo(".time-copy--left", { xPercent: -40, opacity: 0 }, { xPercent: 0, opacity: 1, ease: "power2.out" }, 0.05)
-        .fromTo(".time-copy--right", { xPercent: 40, opacity: 0 }, { xPercent: 0, opacity: 1, ease: "power2.out" }, 0.45)
-        .to(".timepiece-core", { boxShadow: "0 0 80px rgba(201,163,93,.38)", ease: "power2.inOut" }, 0.55);
-
-      gsap.to(".atelier-track", {
-        xPercent: -18,
-        ease: "none",
-        scrollTrigger: { trigger: ".atelier-gallery", start: "top bottom", end: "bottom top", scrub: 1 },
+        return () => {
+          if (timepieceAnimation.current === mobileTimeline) timepieceAnimation.current = null;
+        };
       });
       }, root);
 
-      cleanupAnimations = () => context.revert();
+      cleanupAnimations = () => {
+        timepieceAnimation.current = null;
+        responsiveAnimations.revert();
+        context.revert();
+      };
     };
 
     void startAnimations();
@@ -123,18 +170,42 @@ export default function Home() {
         </div>
       )}
 
-      <header className="site-header">
+      <header className={`site-header${mobileMenuOpen ? " menu-is-open" : ""}`}>
         <a className="wordmark" href="#top" aria-label="Damiano Oro e Gioielli, torna all'inizio">
           <span>Damiano</span>
           <small>Oro e Gioielli</small>
         </a>
-        <nav aria-label="Navigazione principale">
+        <nav className="desktop-navigation" aria-label="Navigazione principale">
           <a href="#atelier">Atelier</a>
           <a href="#gioielli">Gioielli</a>
           <a href="#contatti">Contatti</a>
         </nav>
         <a className="header-cta" href="tel:+393930436460">Parliamone</a>
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-label={mobileMenuOpen ? "Chiudi il menu" : "Apri il menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+        >
+          <span />
+          <span />
+        </button>
       </header>
+
+      <nav
+        className={`mobile-navigation${mobileMenuOpen ? " is-open" : ""}`}
+        id="mobile-navigation"
+        aria-label="Navigazione mobile"
+        aria-hidden={!mobileMenuOpen}
+      >
+        <p>Menu</p>
+        <a href="#atelier" onClick={closeMobileMenu}><span>01</span> Atelier</a>
+        <a href="#gioielli" onClick={closeMobileMenu}><span>02</span> Gioielli</a>
+        <a href="#contatti" onClick={closeMobileMenu}><span>03</span> Contatti</a>
+        <a className="mobile-call" href="tel:+393930436460" onClick={closeMobileMenu}>Chiama l&apos;atelier <span>↗</span></a>
+      </nav>
 
       <section className="hero" id="top">
         <div className="hero-copy">
@@ -180,7 +251,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="time-section" ref={timeSection} aria-label="Il gioiello prende forma con lo scorrimento">
+      <section className="time-section" ref={timeSection} aria-label="Il gioiello prende forma con lo scorrimento o con un tocco">
         <div className="timepiece-stage">
           <div className="time-copy time-copy--left">
             <span>01</span>
@@ -197,11 +268,24 @@ export default function Home() {
             </div>
           </div>
 
+          <button
+            className="timepiece-trigger"
+            type="button"
+            aria-label={timepieceActive ? "Scomponi il gioiello" : "Componi il gioiello"}
+            aria-pressed={timepieceActive}
+            onClick={toggleTimepiece}
+          >
+            <span className="timepiece-trigger-ring" aria-hidden="true" />
+          </button>
+
           <div className="time-copy time-copy--right">
             <span>02</span>
             <p>La precisione<br />del dettaglio</p>
           </div>
-          <p className="time-caption">Scorri per comporre il gioiello</p>
+          <p className="time-caption">
+            <span className="desktop-instruction">Scorri per comporre il gioiello</span>
+            <span className="mobile-instruction">{timepieceActive ? "Tocca per tornare all'inizio" : "Tocca l'orologio per comporlo"}</span>
+          </p>
         </div>
       </section>
 
