@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://damiano-oro-e-gioielli.matteo1-salari.chatgpt.site"),
   title: "Damiano Oro e Gioielli | Atelier orafo a Galatone",
   description:
     "Atelier orafo e gioielleria a Galatone. Creazioni in oro, orologi di pregio e pezzi unici realizzati a mano.",
@@ -14,6 +15,20 @@ export const metadata: Metadata = {
     description: "Il tempo diventa prezioso. Atelier orafo e gioielleria a Galatone.",
     locale: "it_IT",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Damiano Oro e Gioielli — Atelier orafo a Galatone",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Damiano Oro e Gioielli",
+    description: "Il tempo diventa prezioso. Atelier orafo e gioielleria a Galatone.",
+    images: ["/og.png"],
   },
 };
 
