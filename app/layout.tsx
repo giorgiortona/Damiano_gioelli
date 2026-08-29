@@ -5,14 +5,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://damiano-oro-e-gioielli.matteo1-salari.chatgpt.site"),
   title: "Damiano Oro e Gioielli | Atelier orafo a Galatone",
   description:
-    "Atelier orafo e gioielleria a Galatone. Creazioni in oro, orologi di pregio e pezzi unici realizzati a mano.",
+    "Gioielleria e atelier orafo a Galatone: lavorazioni in oro e argento, orologi, oggetti preziosi per la casa e cornici.",
   icons: {
     icon: "/images/logo_damiano.jpeg",
     shortcut: "/images/logo_damiano.jpeg",
   },
   openGraph: {
     title: "Damiano Oro e Gioielli",
-    description: "Il tempo diventa prezioso. Atelier orafo e gioielleria a Galatone.",
+    description: "Oro, argento, orologi, oggetti preziosi per la casa e cornici. Atelier orafo a Galatone.",
     locale: "it_IT",
     type: "website",
     images: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Damiano Oro e Gioielli",
-    description: "Il tempo diventa prezioso. Atelier orafo e gioielleria a Galatone.",
+    description: "Oro, argento, orologi, oggetti preziosi per la casa e cornici. Atelier orafo a Galatone.",
     images: ["/og.png"],
   },
 };

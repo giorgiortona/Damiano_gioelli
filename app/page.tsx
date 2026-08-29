@@ -221,7 +221,7 @@ export default function Home() {
           <p className="eyebrow hero-reveal">Atelier orafo · Galatone</p>
           <h1 className="hero-reveal">Il tempo<br />diventa <em>prezioso.</em></h1>
           <p className="hero-intro hero-reveal">
-            Gioielli in oro, orologi di pregio e pezzi unici realizzati a mano.
+            Oro, argento, orologi e oggetti preziosi per la casa, scelti e lavorati con cura.
           </p>
           <a className="text-link hero-reveal" href="#atelier">Scopri l&apos;atelier <span>↘</span></a>
         </div>
@@ -311,7 +311,7 @@ export default function Home() {
           <p className="eyebrow" data-reveal>Dentro l&apos;atelier</p>
           <h2 data-reveal>La cura non si vede.<br /><em>Si riconosce.</em></h2>
           <p className="atelier-copy" data-reveal>
-            Esperienza artigiana e tecnologia di precisione si incontrano in ogni fase della lavorazione.
+            Esperienza artigiana e tecnologia di precisione si incontrano nella lavorazione di gioielli in oro e argento, dal primo gesto all&apos;ultima finitura.
           </p>
         </div>
 
@@ -329,24 +329,29 @@ export default function Home() {
       <section className="collections section-pad" id="gioielli">
         <div className="collections-head">
           <div className="section-number" data-reveal>06 / 09</div>
-          <p className="eyebrow dark" data-reveal>Una scelta personale</p>
+          <p className="eyebrow dark" data-reveal>Gioielli, tempo, casa</p>
           <h2 data-reveal>Forme che<br /><em>restano.</em></h2>
         </div>
         <div className="collection-list">
           <article data-reveal>
             <span>01</span>
-            <h3>Creazioni in oro</h3>
+            <h3>Oro e argento</h3>
             <p>Gioielli scelti per luce, equilibrio e carattere.</p>
           </article>
           <article data-reveal>
             <span>02</span>
-            <h3>Pezzi unici</h3>
-            <p>Realizzati a mano per raccontare qualcosa di tuo.</p>
+            <h3>Lavorazioni orafe</h3>
+            <p>Precisione artigiana dedicata a ogni gioiello.</p>
           </article>
           <article data-reveal>
             <span>03</span>
             <h3>Orologi di pregio</h3>
             <p>Il tempo, interpretato con stile e precisione.</p>
+          </article>
+          <article data-reveal>
+            <span>04</span>
+            <h3>Casa e cornici</h3>
+            <p>Oggetti preziosi, cornici e dettagli d&apos;arredo eleganti.</p>
           </article>
         </div>
       </section>
