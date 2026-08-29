@@ -91,14 +91,14 @@ export default function Home() {
 
       const composeTimepiece = (timeline: ReturnType<typeof gsap.timeline>) => {
         timeline
-          .fromTo(".timepiece", { scale: 0.48, rotate: -45 }, { scale: 1, rotate: 28, duration: 1.35, ease: "power2.inOut" }, 0)
-          .fromTo(".timepiece-outer", { rotate: -90 }, { rotate: 300, duration: 1.6, ease: "power1.inOut" }, 0)
-          .fromTo(".timepiece-gem", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(49% at 50% 50%)", duration: 1.2, ease: "power2.inOut" }, 0.12)
-          .fromTo(".timepiece-hand--long", { rotate: -30 }, { rotate: 690, duration: 1.6, ease: "power1.inOut" }, 0)
-          .fromTo(".timepiece-hand--short", { rotate: 40 }, { rotate: 220, duration: 1.6, ease: "power1.inOut" }, 0)
+          .fromTo(".timepiece", { scale: 0.58, rotate: -12, yPercent: 8 }, { scale: 1, rotate: 0, yPercent: 0, duration: 1.55, ease: "power3.inOut" }, 0)
+          .fromTo(".timepiece-orbit", { scale: 0.72, rotate: -120, opacity: .15 }, { scale: 1, rotate: 240, opacity: 1, duration: 1.7, ease: "power2.inOut" }, 0)
+          .fromTo(".timepiece-watch", { clipPath: "circle(27% at 50% 50%)", filter: "brightness(.62) blur(7px) drop-shadow(0 20px 18px rgba(29,25,20,.12))" }, { clipPath: "circle(72% at 50% 50%)", filter: "brightness(1) blur(0px) drop-shadow(0 38px 30px rgba(29,25,20,.22))", duration: 1.35, ease: "power3.inOut" }, 0.08)
+          .fromTo(".timepiece-sweep", { rotate: -90, opacity: 0 }, { rotate: 630, opacity: .9, duration: 1.7, ease: "power1.inOut" }, 0.08)
+          .fromTo(".timepiece-reflection", { xPercent: -230, opacity: 0 }, { xPercent: 230, opacity: .65, duration: 1.25, ease: "power2.inOut" }, 0.22)
           .fromTo(".time-copy--left", { xPercent: -40, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .8, ease: "power2.out" }, 0.08)
           .fromTo(".time-copy--right", { xPercent: 40, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .8, ease: "power2.out" }, 0.62)
-          .to(".timepiece-core", { boxShadow: "0 0 80px rgba(201,163,93,.38)", duration: .65, ease: "power2.inOut" }, 0.72);
+          .to(".timepiece-dial-glow", { opacity: .78, scale: 1.08, duration: .72, ease: "power2.inOut" }, 0.78);
         return timeline;
       };
 
@@ -251,27 +251,34 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="time-section" ref={timeSection} aria-label="Il gioiello prende forma con lo scorrimento o con un tocco">
+      <section className="time-section" ref={timeSection} aria-label="Hamilton Jazzmaster Open Heart animato con lo scorrimento o con un tocco">
         <div className="timepiece-stage">
           <div className="time-copy time-copy--left">
-            <span>01</span>
-            <p>Il tempo<br />della scelta</p>
+            <span>H32705131</span>
+            <p>Hamilton<br /><em>Jazzmaster</em></p>
           </div>
 
           <div className="timepiece" aria-hidden="true">
-            <div className="timepiece-outer" />
-            <div className="timepiece-core">
-              <img className="timepiece-gem" src="/images/image00005.jpg" alt="" width="1440" height="1920" loading="lazy" decoding="async" />
-              <i className="timepiece-hand timepiece-hand--long" />
-              <i className="timepiece-hand timepiece-hand--short" />
-              <b className="timepiece-pin" />
-            </div>
+            <div className="timepiece-orbit" />
+            <div className="timepiece-dial-glow" />
+            <img
+              className="timepiece-watch"
+              src="/images/hamilton-jazzmaster-open-heart.webp"
+              alt=""
+              width="2000"
+              height="2000"
+              loading="lazy"
+              decoding="async"
+            />
+            <i className="timepiece-sweep" />
+            <b className="timepiece-pin" />
+            <i className="timepiece-reflection" />
           </div>
 
           <button
             className="timepiece-trigger"
             type="button"
-            aria-label={timepieceActive ? "Scomponi il gioiello" : "Componi il gioiello"}
+            aria-label={timepieceActive ? "Riporta l'Hamilton allo stato iniziale" : "Anima l'Hamilton Jazzmaster"}
             aria-pressed={timepieceActive}
             onClick={toggleTimepiece}
           >
@@ -279,12 +286,12 @@ export default function Home() {
           </button>
 
           <div className="time-copy time-copy--right">
-            <span>02</span>
-            <p>La precisione<br />del dettaglio</p>
+            <span>H-10</span>
+            <p>Open Heart<br />Automatico</p>
           </div>
           <p className="time-caption">
-            <span className="desktop-instruction">Scorri per comporre il gioiello</span>
-            <span className="mobile-instruction">{timepieceActive ? "Tocca per tornare all'inizio" : "Tocca l'orologio per comporlo"}</span>
+            <span className="desktop-instruction">Scorri per rivelare il movimento</span>
+            <span className="mobile-instruction">{timepieceActive ? "Tocca per tornare all'inizio" : "Tocca l'Hamilton per animarlo"}</span>
           </p>
         </div>
       </section>

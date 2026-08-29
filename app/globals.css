@@ -157,24 +157,23 @@ h2 em,
 .manifesto-copy { align-self: center; margin: 14vw 0 0; font-family: var(--serif); font-size: clamp(18px, 1.55vw, 28px); line-height: 1.45; }
 
 .time-section { position: relative; background: var(--paper-deep); }
-.timepiece-stage { position: relative; width: 100%; height: 100svh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle at center, #f3eee6 0, #e4ddd0 54%, #d7cec0 100%); }
-.timepiece-stage::before { content: "DAMIANO"; position: absolute; color: rgba(54,46,34,.045); font-family: var(--serif); font-size: 22vw; letter-spacing: -.07em; }
-.timepiece { position: relative; width: min(49vw, 650px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; }
-.timepiece-outer { position: absolute; inset: 0; border: 1px solid rgba(124,92,39,.42); border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(119,87,34,.9) 0deg .6deg, transparent .6deg 7.5deg); -webkit-mask: radial-gradient(circle, transparent 0 93%, #000 93.2% 100%); mask: radial-gradient(circle, transparent 0 93%, #000 93.2% 100%); }
-.timepiece-outer::before,
-.timepiece-outer::after { content: ""; position: absolute; border-radius: 50%; border: 1px solid rgba(132,101,50,.4); }
-.timepiece-outer::before { inset: 5%; }
-.timepiece-outer::after { inset: 12%; border-color: rgba(132,101,50,.19); }
-.timepiece-core { position: relative; width: 73%; aspect-ratio: 1; overflow: hidden; border: 1px solid rgba(113,82,32,.52); border-radius: 50%; background: #ddd3c3; transition: box-shadow .2s; }
-.timepiece-gem { position: absolute; inset: 5%; width: 90%; height: 90%; border-radius: 50%; object-fit: cover; filter: saturate(.68) contrast(1.06) brightness(.84); }
-.timepiece-core::after { content: ""; position: absolute; inset: 5%; border-radius: 50%; background: radial-gradient(circle, transparent 48%, rgba(20,17,13,.12)), linear-gradient(135deg, rgba(255,255,255,.25), transparent 42%); }
-.timepiece-hand { position: absolute; z-index: 2; left: calc(50% - 1px); bottom: 50%; width: 2px; transform-origin: 50% 100%; background: #efe3cb; box-shadow: 0 0 4px rgba(0,0,0,.35); }
-.timepiece-hand--long { height: 39%; }
-.timepiece-hand--short { height: 27%; background: #c49b55; }
-.timepiece-pin { position: absolute; z-index: 3; width: 14px; aspect-ratio: 1; top: calc(50% - 7px); left: calc(50% - 7px); border: 3px solid #ead9b8; border-radius: 50%; background: #3e3223; }
+.timepiece-stage { position: relative; width: 100%; height: 100svh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(circle at center, #f4f0e9 0, #e2dcd2 52%, #cbc2b6 100%); }
+.timepiece-stage::before { content: "HAMILTON"; position: absolute; color: rgba(54,46,34,.045); font-family: var(--sans); font-size: 15vw; font-weight: 300; letter-spacing: .14em; transform: translateX(.07em); }
+.timepiece { position: relative; z-index: 1; width: min(45vw, 700px); aspect-ratio: 1; display: grid; place-items: center; isolation: isolate; }
+.timepiece-orbit { position: absolute; z-index: -1; inset: 18%; border: 1px solid rgba(124,92,39,.5); border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(119,87,34,.82) 0deg .55deg, transparent .55deg 7.5deg); -webkit-mask: radial-gradient(circle, transparent 0 96%, #000 96.2% 100%); mask: radial-gradient(circle, transparent 0 96%, #000 96.2% 100%); }
+.timepiece-orbit::before,
+.timepiece-orbit::after { content: ""; position: absolute; border-radius: 50%; border: 1px solid rgba(132,101,50,.28); }
+.timepiece-orbit::before { inset: -8%; }
+.timepiece-orbit::after { inset: 8%; border-color: rgba(132,101,50,.17); }
+.timepiece-watch { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 38px 30px rgba(29,25,20,.22)); will-change: clip-path, filter; }
+.timepiece-dial-glow { position: absolute; z-index: 0; inset: 22%; border-radius: 50%; background: radial-gradient(circle, rgba(217,188,128,.2), transparent 66%); box-shadow: 0 0 84px rgba(186,145,77,.42); opacity: 0; }
+.timepiece-sweep { position: absolute; z-index: 3; left: calc(50% - .5px); bottom: 50%; width: 1px; height: 17.5%; transform-origin: 50% 100%; background: linear-gradient(0deg, #b98c45, #f0d7a6); box-shadow: 0 0 4px rgba(33,25,14,.5); }
+.timepiece-pin { position: absolute; z-index: 4; width: 8px; aspect-ratio: 1; top: calc(50% - 4px); left: calc(50% - 4px); border: 2px solid #e4c990; border-radius: 50%; background: #2b2926; box-shadow: 0 0 0 2px rgba(255,255,255,.42); }
+.timepiece-reflection { position: absolute; z-index: 5; top: 28%; left: 43%; width: 9%; height: 44%; border-radius: 50%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.76), transparent); filter: blur(8px); mix-blend-mode: screen; transform: rotate(22deg); opacity: 0; pointer-events: none; }
 .time-copy { position: absolute; z-index: 2; display: flex; gap: 20px; align-items: flex-start; font-family: var(--serif); font-size: clamp(24px, 2.4vw, 42px); line-height: 1.06; }
 .time-copy span { padding-top: 8px; font-family: var(--sans); font-size: 8px; letter-spacing: .2em; color: #82632f; }
 .time-copy p { margin: 0; }
+.time-copy em { color: #8e6b31; font-weight: 400; }
 .time-copy--left { left: 6vw; top: 24%; }
 .time-copy--right { right: 6vw; bottom: 24%; text-align: right; }
 .time-caption { position: absolute; bottom: 5vh; margin: 0; font-size: 8px; text-transform: uppercase; letter-spacing: .25em; color: rgba(23,21,18,.6); }
@@ -300,7 +299,7 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
   .image-card--red { grid-column: 1 / -1; width: 76%; }
   .image-card--still { grid-column: 2; margin-top: 0; }
   .manifesto-copy { grid-row: 2; align-self: start; margin: 0; font-size: 18px; }
-  .timepiece-stage { --timepiece-size: min(76vw, 360px); }
+  .timepiece-stage { --timepiece-size: min(88vw, 430px); }
   .timepiece { width: var(--timepiece-size); }
   .timepiece-trigger {
     position: absolute;
@@ -316,7 +315,7 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
-  .timepiece-trigger-ring { position: absolute; inset: -7%; border: 1px solid rgba(150,112,48,.44); border-radius: 50%; animation: touch-ring 2.4s ease-out infinite; }
+  .timepiece-trigger-ring { position: absolute; inset: 17%; border: 1px solid rgba(150,112,48,.5); border-radius: 50%; animation: touch-ring 2.4s ease-out infinite; }
   .timepiece-trigger[aria-pressed="true"] .timepiece-trigger-ring { opacity: 0; animation: none; }
   .time-copy { font-size: 22px; }
   .time-copy--left { left: 24px; top: 15%; }
