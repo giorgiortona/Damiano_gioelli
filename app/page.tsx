@@ -189,8 +189,17 @@ export default function Home() {
           aria-controls="mobile-navigation"
           onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
         >
-          <span />
-          <span />
+          <span className="menu-toggle-label" aria-hidden="true">
+            <span className="menu-toggle-label-open">Menu</span>
+            <span className="menu-toggle-label-close">Chiudi</span>
+          </span>
+          <span className="menu-toggle-seal" aria-hidden="true">
+            <span className="menu-toggle-orbit">
+              <span className="menu-toggle-gem" />
+            </span>
+            <span className="menu-toggle-line menu-toggle-line--top" />
+            <span className="menu-toggle-line menu-toggle-line--bottom" />
+          </span>
         </button>
       </header>
 

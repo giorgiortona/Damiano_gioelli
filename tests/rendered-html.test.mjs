@@ -26,6 +26,7 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /prezioso/);
   assert.match(html, /Hamilton Jazzmaster Open Heart/i);
   assert.match(html, /hamilton-jazzmaster-open-heart\.webp/);
+  assert.match(html, /menu-toggle-seal/);
   assert.match(html, /Via Camillo Benso Conte di Cavour, 33/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
