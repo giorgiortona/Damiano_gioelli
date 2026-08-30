@@ -69,7 +69,7 @@ img { display: block; max-width: 100%; }
 .loader-progress-fill { display: block; width: 100%; height: 100%; transform: scaleX(0); transform-origin: left; background: var(--gold-light); }
 
 .site-header {
-  position: absolute;
+  position: fixed;
   z-index: 20;
   top: 0;
   left: 0;
@@ -80,6 +80,10 @@ img { display: block; max-width: 100%; }
   align-items: center;
   padding: 0 4.2vw;
   border-bottom: 1px solid rgba(242, 238, 231, 0.24);
+  background: linear-gradient(180deg, rgba(13,12,11,.9), rgba(13,12,11,.72));
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 34px rgba(0,0,0,.08);
   color: #fff;
 }
 .wordmark { display: flex; flex-direction: column; width: max-content; }

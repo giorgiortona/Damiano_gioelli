@@ -39,9 +39,10 @@ test("server-renders the Damiano atelier experience", async () => {
 });
 
 test("removes the disposable starter preview", async () => {
-  const [page, layout, packageJson] = await Promise.all([
+  const [page, layout, styles, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 
@@ -55,6 +56,7 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /logo_damiano\.jpeg/);
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(layout, /Damiano Oro e Gioielli/);
+  assert.match(styles, /\.site-header\s*\{[^}]*position:\s*fixed/s);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.doesNotMatch(page + layout, /codex-preview|SkeletonPreview|Starter Project/);
   await assert.rejects(access(new URL("../app/_sites-preview/", import.meta.url)));
