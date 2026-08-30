@@ -47,6 +47,8 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /ScrollTrigger/);
   assert.match(page, /composeRing/);
   assert.match(page, /ring-diamond/);
+  assert.match(page, /ring-band--front/);
+  assert.match(page, /opening-hero/);
   assert.match(page, /atelierTrack\.scrollWidth - atelierGallery\.clientWidth/);
   assert.match(page, /logo_damiano\.jpeg/);
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);
