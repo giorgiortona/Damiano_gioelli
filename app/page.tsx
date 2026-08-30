@@ -549,7 +549,13 @@ export default function Home() {
 
       <footer>
         <a className="wordmark footer-mark" href="#top"><span>Damiano</span><small>Oro e Gioielli</small></a>
-        <p>Atelier orafo e gioielleria a Galatone.</p>
+        <div className="footer-info">
+          <p>Atelier orafo e gioielleria a Galatone.</p>
+          <nav aria-label="Documenti legali">
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/cookie-policy">Cookie Policy</a>
+          </nav>
+        </div>
         <a href="#top">Torna su ↑</a>
       </footer>
     </main>
