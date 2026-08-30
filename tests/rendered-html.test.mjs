@@ -28,6 +28,7 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(html, /diamond-ring-setting\.png/);
   assert.match(html, /round-brilliant-diamond\.png/);
+  assert.match(html, /diamond-ring-complete\.png/);
   assert.match(html, /Scorri per comporre l(?:'|&#x27;)anello/i);
   assert.match(html, /menu-toggle-seal/);
   assert.match(html, /Oro e argento/);
@@ -48,6 +49,7 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /composeRing/);
   assert.match(page, /ring-diamond/);
   assert.match(page, /ring-band--front/);
+  assert.match(page, /ring-complete/);
   assert.match(page, /opening-hero/);
   assert.match(page, /atelierTrack\.scrollWidth - atelierGallery\.clientWidth/);
   assert.match(page, /logo_damiano\.jpeg/);

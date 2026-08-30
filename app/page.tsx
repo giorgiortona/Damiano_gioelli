@@ -100,7 +100,9 @@ export default function Home() {
           .fromTo(".ring-band", { opacity: .08, filter: "blur(10px) brightness(.55)" }, { opacity: 1, filter: "blur(0px) brightness(1)", duration: 1.5, ease: "power3.inOut" }, .08)
           .fromTo(".ring-fragment", { scale: .15, opacity: 0, rotate: -110 }, { scale: 1, opacity: .85, rotate: 90, duration: .72, stagger: .08, ease: "power2.out" }, .18)
           .to(".ring-fragment", { scale: .2, opacity: 0, duration: .55, stagger: .06, ease: "power2.in" }, .9)
-          .fromTo(".ring-diamond", { yPercent: -330, scale: .18, rotate: -150, opacity: 0, filter: "blur(8px) brightness(1.8)" }, { yPercent: 0, scale: 1, rotate: 0, opacity: 1, filter: "blur(0px) brightness(1.04)", duration: .82, ease: "power4.in" }, 1.02)
+          .fromTo(".ring-diamond", { yPercent: -330, scale: .18, rotate: -150, opacity: 0, filter: "blur(8px) brightness(1.8)" }, { yPercent: 0, scale: 1, rotate: 0, opacity: 1, filter: "blur(0px) brightness(1.04)", duration: .74, ease: "power4.in" }, 1.02)
+          .fromTo(".ring-complete", { opacity: 0, filter: "blur(2px) brightness(1.5)" }, { opacity: 1, filter: "blur(0px) brightness(1)", duration: .22, ease: "power2.out" }, 1.74)
+          .to(".ring-band, .ring-diamond", { opacity: 0, duration: .22, ease: "power2.out" }, 1.74)
           .fromTo(".ring-set-flash", { scale: .15, opacity: 0 }, { scale: 1.75, opacity: .9, duration: .25, ease: "power2.out" }, 1.74)
           .to(".ring-set-flash", { scale: 2.5, opacity: 0, duration: .42, ease: "power2.out" }, 1.92)
           .fromTo(".ring-copy--left", { xPercent: -35, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .72, ease: "power2.out" }, .12)
@@ -304,6 +306,15 @@ export default function Home() {
                   alt=""
                   width="1254"
                   height="1254"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+                <img
+                  className="ring-complete"
+                  src="/images/diamond-ring-complete.png"
+                  alt=""
+                  width="1247"
+                  height="1261"
                   loading="eager"
                   fetchPriority="high"
                 />
