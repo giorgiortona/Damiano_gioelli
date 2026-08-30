@@ -255,7 +255,7 @@ export default function Home() {
       <nav
         className={`mobile-navigation${mobileMenuOpen ? " is-open" : ""}`}
         id="mobile-navigation"
-        aria-label="Navigazione mobile"
+        aria-label="Navigazione principale"
         aria-hidden={!mobileMenuOpen}
       >
         <p>Menu</p>
