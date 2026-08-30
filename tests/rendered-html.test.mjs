@@ -58,6 +58,8 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(layout, /Damiano Oro e Gioielli/);
   assert.match(styles, /\.site-header\s*\{[^}]*position:\s*fixed/s);
+  assert.match(styles, /--dial-center-y:\s*44%/);
+  assert.match(styles, /bottom:\s*calc\(100% - var\(--dial-center-y\)\)/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.doesNotMatch(page + layout, /codex-preview|SkeletonPreview|Starter Project/);
   await assert.rejects(access(new URL("../app/_sites-preview/", import.meta.url)));
