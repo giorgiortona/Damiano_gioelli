@@ -313,8 +313,8 @@ export default function Home() {
                   className="ring-complete"
                   src="/images/diamond-ring-complete.png"
                   alt=""
-                  width="1247"
-                  height="1261"
+                  width="1254"
+                  height="1254"
                   loading="eager"
                   fetchPriority="high"
                 />
