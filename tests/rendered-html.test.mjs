@@ -26,6 +26,9 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /prezioso/);
   assert.match(html, /Hamilton Jazzmaster Open Heart/i);
   assert.match(html, /hamilton-jazzmaster-open-heart\.webp/);
+  assert.match(html, /diamond-ring-setting\.png/);
+  assert.match(html, /round-brilliant-diamond\.png/);
+  assert.match(html, /Scorri per comporre l(?:'|&#x27;)anello/i);
   assert.match(html, /menu-toggle-seal/);
   assert.match(html, /Oro e argento/);
   assert.match(html, /Lavorazioni orafe/);
@@ -42,6 +45,8 @@ test("removes the disposable starter preview", async () => {
   ]);
 
   assert.match(page, /ScrollTrigger/);
+  assert.match(page, /composeRing/);
+  assert.match(page, /ring-diamond/);
   assert.match(page, /atelierTrack\.scrollWidth - atelierGallery\.clientWidth/);
   assert.match(page, /logo_damiano\.jpeg/);
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);

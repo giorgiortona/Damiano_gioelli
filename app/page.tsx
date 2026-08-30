@@ -7,10 +7,13 @@ const mapsUrl = "https://www.google.com/maps/search/?api=1&query=Gioielleria+Dam
 export default function Home() {
   const root = useRef<HTMLElement>(null);
   const loader = useRef<HTMLDivElement>(null);
+  const ringSection = useRef<HTMLElement>(null);
   const timeSection = useRef<HTMLElement>(null);
+  const ringAnimation = useRef<{ play: () => void; reverse: () => void } | null>(null);
   const timepieceAnimation = useRef<{ play: () => void; reverse: () => void } | null>(null);
   const [loaderDone, setLoaderDone] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [ringActive, setRingActive] = useState(false);
   const [timepieceActive, setTimepieceActive] = useState(false);
 
   useEffect(() => {
@@ -28,6 +31,15 @@ export default function Home() {
   }, [mobileMenuOpen]);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const toggleRing = () => {
+    setRingActive((isActive) => {
+      const nextState = !isActive;
+      if (nextState) ringAnimation.current?.play();
+      else ringAnimation.current?.reverse();
+      return nextState;
+    });
+  };
 
   const toggleTimepiece = () => {
     setTimepieceActive((isActive) => {
@@ -75,9 +87,9 @@ export default function Home() {
         .to(".loader-progress-fill", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, 0.15)
         .to(".loader-count", { opacity: 1, duration: 0.35 }, 0.3)
         .to(loader.current, { yPercent: -100, duration: 1.05, ease: "power4.inOut" }, ">-0.1")
-        .from(".hero-reveal", { y: 70, opacity: 0, duration: 1.1, stagger: 0.09 }, "-=0.5")
-        .from(".hero-visual", { scale: 1.08, duration: 1.55, ease: "power3.out" }, "-=1.25")
-        .from(".hero-orbit", { scale: 0.6, rotate: -80, opacity: 0, duration: 1.3 }, "-=1.1");
+        .from(".ring-intro-reveal", { y: 58, opacity: 0, duration: 1, stagger: 0.1 }, "-=0.5")
+        .from(".ring-assembly", { scale: 0.88, opacity: 0, duration: 1.35, ease: "power3.out" }, "-=1.12")
+        .from(".ring-orbit-frame", { scale: 0.68, rotate: -80, opacity: 0, duration: 1.3 }, "-=1.1");
 
       gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
         gsap.from(element, {
@@ -88,6 +100,23 @@ export default function Home() {
           scrollTrigger: { trigger: element, start: "top 86%", once: true },
         });
       });
+
+      const composeRing = (timeline: ReturnType<typeof gsap.timeline>) => {
+        timeline
+          .fromTo(".ring-stage-glow", { scale: .62, opacity: .08 }, { scale: 1.08, opacity: .82, duration: 1.9, ease: "power2.inOut" }, 0)
+          .fromTo(".ring-orbit--outer", { scale: .66, rotate: -150, opacity: .08 }, { scale: 1, rotate: 300, opacity: .72, duration: 1.9, ease: "power2.inOut" }, 0)
+          .fromTo(".ring-orbit--inner", { scale: .5, rotate: 120, opacity: 0 }, { scale: 1, rotate: -260, opacity: .48, duration: 1.9, ease: "power2.inOut" }, 0)
+          .fromTo(".ring-assembly-core", { scale: .56, rotate: -145, yPercent: 10 }, { scale: 1, rotate: 360, yPercent: 0, duration: 1.9, ease: "power3.inOut" }, 0)
+          .fromTo(".ring-band", { clipPath: "circle(7% at 50% 24%)", opacity: .08, filter: "blur(10px) brightness(.55)" }, { clipPath: "circle(76% at 50% 50%)", opacity: 1, filter: "blur(0px) brightness(1)", duration: 1.5, ease: "power3.inOut" }, .08)
+          .fromTo(".ring-fragment", { scale: .15, opacity: 0, rotate: -110 }, { scale: 1, opacity: .85, rotate: 90, duration: .72, stagger: .08, ease: "power2.out" }, .18)
+          .to(".ring-fragment", { scale: .2, opacity: 0, duration: .55, stagger: .06, ease: "power2.in" }, .9)
+          .fromTo(".ring-diamond", { yPercent: -330, scale: .18, rotate: -150, opacity: 0, filter: "blur(8px) brightness(1.8)" }, { yPercent: 0, scale: 1, rotate: 0, opacity: 1, filter: "blur(0px) brightness(1.04)", duration: .82, ease: "power4.in" }, 1.02)
+          .fromTo(".ring-set-flash", { scale: .15, opacity: 0 }, { scale: 1.75, opacity: .9, duration: .25, ease: "power2.out" }, 1.74)
+          .to(".ring-set-flash", { scale: 2.5, opacity: 0, duration: .42, ease: "power2.out" }, 1.92)
+          .fromTo(".ring-copy--left", { xPercent: -35, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .72, ease: "power2.out" }, .12)
+          .fromTo(".ring-copy--right", { xPercent: 35, opacity: 0 }, { xPercent: 0, opacity: 1, duration: .72, ease: "power2.out" }, 1.18);
+        return timeline;
+      };
 
       const composeTimepiece = (timeline: ReturnType<typeof gsap.timeline>) => {
         timeline
@@ -114,6 +143,16 @@ export default function Home() {
             },
           );
         });
+
+        composeRing(gsap.timeline({
+          scrollTrigger: {
+            trigger: ringSection.current,
+            start: "top top",
+            end: "+=220%",
+            pin: ".ring-stage",
+            scrub: 1.1,
+          },
+        }));
 
         composeTimepiece(gsap.timeline({
           scrollTrigger: {
@@ -144,16 +183,20 @@ export default function Home() {
       });
 
       responsiveAnimations.add("(max-width: 900px)", () => {
+        const mobileRingTimeline = composeRing(gsap.timeline({ paused: true }));
         const mobileTimeline = composeTimepiece(gsap.timeline({ paused: true }));
+        ringAnimation.current = mobileRingTimeline;
         timepieceAnimation.current = mobileTimeline;
 
         return () => {
+          if (ringAnimation.current === mobileRingTimeline) ringAnimation.current = null;
           if (timepieceAnimation.current === mobileTimeline) timepieceAnimation.current = null;
         };
       });
       }, root);
 
       cleanupAnimations = () => {
+        ringAnimation.current = null;
         timepieceAnimation.current = null;
         responsiveAnimations.revert();
         context.revert();
@@ -227,17 +270,77 @@ export default function Home() {
         <a className="mobile-call" href="tel:+393930436460" onClick={closeMobileMenu}>Chiama l&apos;atelier <span>↗</span></a>
       </nav>
 
-      <section className="hero" id="top">
+      <section className="ring-section" id="top" ref={ringSection} aria-label="Anello con diamante che si compone durante lo scorrimento">
+        <div className="ring-stage">
+          <div className="ring-stage-glow" aria-hidden="true" />
+
+          <div className="ring-copy ring-copy--left ring-intro-reveal">
+            <span>Materia</span>
+            <p>La forma<br /><em>prende vita.</em></p>
+          </div>
+
+          <div className="ring-assembly" aria-hidden="true">
+            <div className="ring-orbit-frame ring-orbit ring-orbit--outer" />
+            <div className="ring-orbit ring-orbit--inner" />
+            <span className="ring-fragment ring-fragment--one" />
+            <span className="ring-fragment ring-fragment--two" />
+            <span className="ring-fragment ring-fragment--three" />
+            <div className="ring-assembly-core">
+              <img
+                className="ring-diamond"
+                src="/images/round-brilliant-diamond.png"
+                alt=""
+                width="1254"
+                height="1254"
+                loading="eager"
+                fetchPriority="high"
+              />
+              <img
+                className="ring-band"
+                src="/images/diamond-ring-setting.png"
+                alt=""
+                width="1254"
+                height="1254"
+                loading="eager"
+                fetchPriority="high"
+              />
+            </div>
+            <span className="ring-set-flash" />
+          </div>
+
+          <button
+            className="ring-trigger"
+            type="button"
+            aria-label={ringActive ? "Riporta l'anello allo stato iniziale" : "Componi l'anello e incastona il diamante"}
+            aria-pressed={ringActive}
+            onClick={toggleRing}
+          >
+            <span className="ring-trigger-ring" aria-hidden="true" />
+          </button>
+
+          <div className="ring-copy ring-copy--right ring-intro-reveal">
+            <span>Diamante</span>
+            <p>La luce<br /><em>trova casa.</em></p>
+          </div>
+
+          <p className="ring-caption ring-intro-reveal">
+            <span className="desktop-instruction">Scorri per comporre l&apos;anello</span>
+            <span className="mobile-instruction">{ringActive ? "Tocca per ricominciare" : "Tocca per incastonare il diamante"}</span>
+          </p>
+        </div>
+      </section>
+
+      <section className="hero" id="intro">
         <div className="hero-copy">
-          <p className="eyebrow hero-reveal">Atelier orafo · Galatone</p>
-          <h1 className="hero-reveal">Il tempo<br />diventa <em>prezioso.</em></h1>
-          <p className="hero-intro hero-reveal">
+          <p className="eyebrow" data-reveal>Atelier orafo · Galatone</p>
+          <h1 data-reveal>Il tempo<br />diventa <em>prezioso.</em></h1>
+          <p className="hero-intro" data-reveal>
             Oro, argento, orologi e oggetti preziosi per la casa, scelti e lavorati con cura.
           </p>
-          <a className="text-link hero-reveal" href="#atelier">Scopri l&apos;atelier <span>↘</span></a>
+          <a className="text-link" href="#atelier" data-reveal>Scopri l&apos;atelier <span>↘</span></a>
         </div>
 
-        <div className="hero-visual">
+        <div className="hero-visual" data-reveal>
           <img src="/images/image00008.jpg" alt="Collana in oro indossata" width="1440" height="1920" loading="eager" fetchPriority="high" />
           <div className="hero-orbit" aria-hidden="true"><span /></div>
           <div className="edition-note">01 — Luce, materia, gesto</div>

@@ -93,6 +93,63 @@ img { display: block; max-width: 100%; }
 .menu-toggle,
 .mobile-navigation { display: none; }
 
+.ring-section { position: relative; background: #11100f; color: #f5f0e8; }
+.ring-stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(157,119,61,.19), transparent 31%),
+    radial-gradient(circle at 50% 50%, #24211d 0, #151412 52%, #0d0c0b 100%);
+}
+.ring-stage::before {
+  content: "DAMIANO";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: rgba(238,220,187,.035);
+  font-family: var(--serif);
+  font-size: 15vw;
+  font-style: italic;
+  letter-spacing: -.055em;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+.ring-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,.2), transparent 28%, transparent 72%, rgba(0,0,0,.2));
+  pointer-events: none;
+}
+.ring-stage-glow { position: absolute; z-index: 0; width: min(48vw, 680px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(231,208,163,.22), rgba(183,140,73,.08) 42%, transparent 70%); filter: blur(18px); }
+.ring-assembly { position: relative; z-index: 2; width: min(70vmin, 760px); aspect-ratio: 1; display: grid; place-items: center; }
+.ring-assembly-core { position: absolute; z-index: 3; inset: 0; transform-origin: center; will-change: transform; }
+.ring-band { position: absolute; z-index: 3; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 35px 34px rgba(0,0,0,.38)); will-change: transform, clip-path, filter; }
+.ring-diamond { position: absolute; z-index: 2; top: 4.4%; left: 38.5%; width: 23%; height: 23%; object-fit: contain; filter: brightness(1.04); will-change: transform, filter; }
+.ring-orbit { position: absolute; z-index: 1; border-radius: 50%; pointer-events: none; will-change: transform; }
+.ring-orbit--outer { inset: 1%; border: 1px solid rgba(214,181,119,.42); background: repeating-conic-gradient(from 0deg, rgba(220,187,125,.8) 0deg .45deg, transparent .45deg 9deg); -webkit-mask: radial-gradient(circle, transparent 0 98%, #000 98.2% 100%); mask: radial-gradient(circle, transparent 0 98%, #000 98.2% 100%); }
+.ring-orbit--inner { inset: 11%; border: 1px solid rgba(214,181,119,.2); }
+.ring-orbit--inner::before { content: ""; position: absolute; inset: 7%; border: 1px solid rgba(255,255,255,.08); border-radius: 50%; }
+.ring-set-flash { position: absolute; z-index: 5; left: 47%; top: 16.5%; width: 6%; aspect-ratio: 1; border: 1px solid rgba(255,246,220,.95); border-radius: 50%; box-shadow: 0 0 14px #fff, 0 0 42px rgba(225,190,123,.9); opacity: 0; pointer-events: none; }
+.ring-fragment { position: absolute; z-index: 2; display: block; width: 8%; height: 2px; border-radius: 50%; background: linear-gradient(90deg, transparent, #e0c692, transparent); box-shadow: 0 0 12px rgba(224,198,146,.8); }
+.ring-fragment--one { left: 12%; top: 34%; transform: rotate(28deg); }
+.ring-fragment--two { right: 10%; top: 48%; transform: rotate(-38deg); }
+.ring-fragment--three { left: 31%; bottom: 9%; transform: rotate(9deg); }
+.ring-copy { position: absolute; z-index: 4; display: flex; gap: 20px; align-items: flex-start; font-family: var(--serif); font-size: clamp(24px, 2.5vw, 44px); line-height: 1.04; }
+.ring-copy > span { padding-top: 8px; color: var(--gold-light); font-family: var(--sans); font-size: 8px; text-transform: uppercase; letter-spacing: .22em; }
+.ring-copy p { margin: 0; }
+.ring-copy em { color: var(--gold-light); font-weight: 400; }
+.ring-copy--left { left: 6vw; top: 25%; }
+.ring-copy--right { right: 6vw; bottom: 24%; text-align: right; }
+.ring-caption { position: absolute; z-index: 4; bottom: 5vh; margin: 0; color: rgba(245,240,232,.55); font-size: 8px; text-transform: uppercase; letter-spacing: .25em; }
+.ring-trigger { display: none; }
+
 .hero {
   min-height: 100svh;
   display: grid;
@@ -177,6 +234,7 @@ h2 em,
 .time-copy--left { left: 6vw; top: 24%; }
 .time-copy--right { right: 6vw; bottom: 24%; text-align: right; }
 .time-caption { position: absolute; bottom: 5vh; margin: 0; font-size: 8px; text-transform: uppercase; letter-spacing: .25em; color: rgba(23,21,18,.6); }
+.ring-trigger,
 .timepiece-trigger,
 .mobile-instruction { display: none; }
 
@@ -374,6 +432,33 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
   .mobile-navigation > a:not(.mobile-call) { display: grid; grid-template-columns: 38px 1fr; align-items: baseline; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,.14); font-family: var(--serif); font-size: clamp(44px, 14vw, 72px); line-height: .95; letter-spacing: -.045em; }
   .mobile-navigation > a:not(.mobile-call) > span { font-family: var(--sans); font-size: 8px; letter-spacing: .2em; color: var(--gold-light); }
   .mobile-navigation .mobile-call { display: flex; justify-content: space-between; margin-top: auto; padding: 22px 0 8px; border-bottom: 1px solid rgba(255,255,255,.42); font-size: 9px; text-transform: uppercase; letter-spacing: .2em; }
+  .ring-stage { --ring-size: min(92vw, 470px); }
+  .ring-stage::before { font-size: 30vw; }
+  .ring-stage::after { background: linear-gradient(0deg, rgba(0,0,0,.32), transparent 25%, transparent 76%, rgba(0,0,0,.18)); }
+  .ring-stage-glow { width: 88vw; }
+  .ring-assembly { width: var(--ring-size); }
+  .ring-trigger {
+    position: absolute;
+    z-index: 6;
+    display: block;
+    width: var(--ring-size);
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ring-trigger:focus-visible { outline-color: var(--gold-light); }
+  .ring-trigger-ring { position: absolute; inset: 7%; border: 1px solid rgba(214,187,134,.42); border-radius: 50%; animation: touch-ring 2.4s ease-out infinite; }
+  .ring-trigger[aria-pressed="true"] .ring-trigger-ring { opacity: 0; animation: none; }
+  .ring-copy { gap: 12px; font-size: clamp(20px, 6vw, 28px); }
+  .ring-copy > span { padding-top: 5px; font-size: 7px; }
+  .ring-copy--left { left: 24px; top: 15%; }
+  .ring-copy--right { right: 24px; bottom: 15%; }
+  .ring-caption { bottom: max(4.5vh, calc(env(safe-area-inset-bottom, 0) + 18px)); width: 100%; padding: 0 24px; text-align: center; line-height: 1.6; }
   .hero { grid-template-columns: 1fr; }
   .hero-copy { position: absolute; inset: auto 0 0; padding: 0 24px 8.5vh; }
   .hero h1 { font-size: clamp(58px, 19vw, 94px); }
@@ -459,6 +544,10 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
 }
 
 @media (max-width: 900px) and (max-height: 700px) {
+  .ring-stage { --ring-size: min(63vh, 72vw); }
+  .ring-copy--left { top: 12%; }
+  .ring-copy--right { bottom: 14%; }
+  .ring-caption { bottom: 18px; }
   .timepiece-stage { --timepiece-size: min(62vh, 72vw); }
   .time-copy--left { top: 12%; }
   .time-copy--right { bottom: 14%; }
