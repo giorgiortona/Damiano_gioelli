@@ -7,6 +7,7 @@ const mapsUrl = "https://www.google.com/maps/search/?api=1&query=Gioielleria+Dam
 export default function Home() {
   const root = useRef<HTMLElement>(null);
   const loader = useRef<HTMLDivElement>(null);
+  const header = useRef<HTMLElement>(null);
   const ringSection = useRef<HTMLElement>(null);
   const timeSection = useRef<HTMLElement>(null);
   const timepieceAnimation = useRef<{ play: () => void; reverse: () => void } | null>(null);
@@ -16,6 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", mobileMenuOpen);
+    if (mobileMenuOpen) header.current?.classList.remove("is-hidden");
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMobileMenuOpen(false);
@@ -27,6 +29,34 @@ export default function Home() {
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    let previousScrollY = window.scrollY;
+    let frameRequested = false;
+
+    const updateHeader = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDifference = currentScrollY - previousScrollY;
+
+      if (currentScrollY < 40 || scrollDifference < -6) {
+        header.current?.classList.remove("is-hidden");
+      } else if (scrollDifference > 6 && currentScrollY > 120 && !document.body.classList.contains("menu-open")) {
+        header.current?.classList.add("is-hidden");
+      }
+
+      if (Math.abs(scrollDifference) > 4) previousScrollY = currentScrollY;
+      frameRequested = false;
+    };
+
+    const handleScroll = () => {
+      if (frameRequested) return;
+      frameRequested = true;
+      window.requestAnimationFrame(updateHeader);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -219,7 +249,7 @@ export default function Home() {
         </div>
       )}
 
-      <header className={`site-header${mobileMenuOpen ? " menu-is-open" : ""}`}>
+      <header ref={header} className={`site-header${mobileMenuOpen ? " menu-is-open" : ""}`}>
         <a className="wordmark" href="#top" aria-label="Damiano Oro e Gioielli, torna all'inizio">
           <span>Damiano</span>
           <small>Oro e Gioielli</small>

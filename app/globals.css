@@ -85,7 +85,10 @@ img { display: block; max-width: 100%; }
   backdrop-filter: blur(14px);
   box-shadow: 0 12px 34px rgba(0,0,0,.08);
   color: #fff;
+  transition: transform .55s cubic-bezier(.2,.75,.25,1), background .45s ease;
+  will-change: transform;
 }
+.site-header.is-hidden { transform: translateY(calc(-100% - 2px)); }
 .wordmark { display: flex; flex-direction: column; width: max-content; }
 .wordmark span { font-family: var(--serif); font-size: 30px; font-style: italic; line-height: .86; letter-spacing: -.04em; }
 .wordmark small { margin-top: 7px; text-transform: uppercase; letter-spacing: .27em; font-size: 8px; }
@@ -442,7 +445,7 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
     background: linear-gradient(180deg, rgba(16,15,13,.76), rgba(16,15,13,.24));
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    transition: background .45s ease;
+    transition: transform .55s cubic-bezier(.2,.75,.25,1), background .45s ease;
   }
   .site-header.menu-is-open { background: #151412; }
   .site-header .desktop-navigation,
