@@ -499,6 +499,13 @@ export default function Home() {
           <address data-reveal>
             Via Camillo Benso Conte di Cavour, 33<br />73044 Galatone LE
           </address>
+          <div className="opening-hours" data-reveal>
+            <span>Orari</span>
+            <p>
+              Martedì — Sabato
+              <strong>09:30 — 13:00&nbsp;&nbsp;·&nbsp;&nbsp;17:00 — 20:00</strong>
+            </p>
+          </div>
           <div className="contact-actions" data-reveal>
             <a href="tel:+393930436460">+39 393 043 6460 <span>↗</span></a>
             <a href={mapsUrl} target="_blank" rel="noreferrer">Indicazioni <span>↗</span></a>
