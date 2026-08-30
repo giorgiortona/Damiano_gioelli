@@ -411,6 +411,10 @@ export default function Home() {
             onClick={toggleTimepiece}
           >
             <span className="timepiece-trigger-ring" aria-hidden="true" />
+            <span className="timepiece-trigger-hint" aria-hidden="true">
+              <strong>{timepieceActive ? "Premi ancora" : "Premi qui"}</strong>
+              <small>{timepieceActive ? "per ricominciare" : "per animare"}</small>
+            </span>
           </button>
 
           <div className="time-copy time-copy--right">

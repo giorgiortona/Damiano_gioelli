@@ -469,6 +469,8 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
   .timepiece-trigger {
     position: absolute;
     z-index: 5;
+    top: 50%;
+    left: 50%;
     display: block;
     width: var(--timepiece-size);
     aspect-ratio: 1;
@@ -478,13 +480,39 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
     background: transparent;
     cursor: pointer;
     touch-action: manipulation;
+    transform: translate(-50%, -50%);
     -webkit-tap-highlight-color: transparent;
   }
   .timepiece-trigger-ring { position: absolute; inset: 17%; border: 1px solid rgba(150,112,48,.5); border-radius: 50%; animation: touch-ring 2.4s ease-out infinite; }
   .timepiece-trigger[aria-pressed="true"] .timepiece-trigger-ring { opacity: 0; animation: none; }
-  .time-copy { font-size: 22px; }
-  .time-copy--left { left: 24px; top: 15%; }
-  .time-copy--right { right: 24px; bottom: 16%; }
+  .timepiece-trigger-hint {
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    display: flex;
+    min-width: 104px;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 9px 14px 8px;
+    border: 1px solid rgba(130,94,40,.46);
+    border-radius: 999px;
+    background: rgba(245,240,232,.82);
+    color: #43351f;
+    box-shadow: 0 8px 24px rgba(52,39,20,.14);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transform: translate(-50%, -50%);
+    transition: background .35s ease, transform .35s ease;
+    pointer-events: none;
+  }
+  .timepiece-trigger-hint strong { font-size: 8px; font-weight: 500; line-height: 1; text-transform: uppercase; letter-spacing: .2em; }
+  .timepiece-trigger-hint small { color: rgba(67,53,31,.62); font-size: 6px; line-height: 1; text-transform: uppercase; letter-spacing: .16em; }
+  .timepiece-trigger[aria-pressed="true"] .timepiece-trigger-hint { background: rgba(245,240,232,.68); transform: translate(-50%, -50%) scale(.94); }
+  .time-copy { left: 24px; right: 24px; width: auto; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 22px; }
+  .time-copy span { padding-top: 0; }
+  .time-copy--left { top: 14%; }
+  .time-copy--right { bottom: 14%; text-align: center; }
   .time-caption { bottom: max(4.5vh, calc(env(safe-area-inset-bottom, 0) + 20px)); width: 100%; padding: 0 24px; text-align: center; line-height: 1.6; }
   .desktop-instruction { display: none; }
   .mobile-instruction { display: inline; }
@@ -540,7 +568,7 @@ footer > a:last-child { justify-self: end; font-size: 8px; text-transform: upper
   .ring-caption { bottom: 18px; }
   .timepiece-stage { --timepiece-size: min(62vh, 72vw); }
   .time-copy--left { top: 12%; }
-  .time-copy--right { bottom: 14%; }
+  .time-copy--right { bottom: 12%; }
   .time-caption { bottom: 18px; }
 }
 

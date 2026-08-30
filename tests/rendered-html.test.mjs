@@ -25,6 +25,7 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /diventa/);
   assert.match(html, /prezioso/);
   assert.match(html, /Hamilton Jazzmaster Open Heart/i);
+  assert.match(html, /Premi qui/i);
   assert.match(html, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(html, /diamond-ring-setting\.png/);
   assert.match(html, /round-brilliant-diamond\.png/);
