@@ -251,6 +251,14 @@ export default function Home() {
 
       <header ref={header} className={`site-header${mobileMenuOpen ? " menu-is-open" : ""}`}>
         <a className="wordmark" href="#top" aria-label="Damiano Oro e Gioielli, torna all'inizio">
+          <img
+            className="header-logo"
+            src="/images/logo_damiano.jpeg"
+            alt=""
+            width="1075"
+            height="937"
+            decoding="async"
+          />
           <span>Damiano</span>
           <small>Oro e Gioielli</small>
         </a>

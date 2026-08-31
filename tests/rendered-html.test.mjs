@@ -59,6 +59,7 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /opening-hero/);
   assert.match(page, /atelierTrack\.scrollWidth - atelierGallery\.clientWidth/);
   assert.match(page, /logo_damiano\.jpeg/);
+  assert.match(page, /className="header-logo"/);
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(layout, /Damiano Oro e Gioielli/);
   assert.match(styles, /\.site-header\s*\{[^}]*position:\s*fixed/s);
