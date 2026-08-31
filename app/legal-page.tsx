@@ -32,6 +32,9 @@ export function LegalPage({ eyebrow, title, intro, children }: LegalPageProps) {
           <a href="/privacy-policy">Privacy Policy</a>
           <a href="/cookie-policy">Cookie Policy</a>
         </nav>
+        <a className="site-credit" href="https://dimana.it" target="_blank" rel="noreferrer">
+          Creato dal team di <strong>dimana.digitalcreations</strong>
+        </a>
       </div>
     </main>
   );

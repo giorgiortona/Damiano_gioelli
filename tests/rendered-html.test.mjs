@@ -38,6 +38,8 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /Via Camillo Benso Conte di Cavour, 33/);
   assert.match(html, /href="\/privacy-policy"/);
   assert.match(html, /href="\/cookie-policy"/);
+  assert.match(html, /href="https:\/\/dimana\.it"/);
+  assert.match(html, /dimana\.digitalcreations/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
