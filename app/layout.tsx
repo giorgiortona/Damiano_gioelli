@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   description:
     "Gioielleria e atelier orafo a Galatone: lavorazioni in oro e argento, orologi, oggetti preziosi per la casa e cornici.",
   icons: {
-    icon: "/images/logo_damiano.jpeg",
-    shortcut: "/images/logo_damiano.jpeg",
+    icon: "/images/logo-damiano.png",
+    shortcut: "/images/logo-damiano.png",
   },
   openGraph: {
     title: "Damiano Oro e Gioielli",

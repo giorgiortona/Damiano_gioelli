@@ -11,6 +11,7 @@ export default function Home() {
   const ringSection = useRef<HTMLElement>(null);
   const timeSection = useRef<HTMLElement>(null);
   const timepieceAnimation = useRef<{ play: () => void; reverse: () => void } | null>(null);
+  const scrollTriggerApi = useRef<typeof import("gsap/ScrollTrigger").ScrollTrigger | null>(null);
   const [loaderDone, setLoaderDone] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [timepieceActive, setTimepieceActive] = useState(false);
@@ -60,6 +61,34 @@ export default function Home() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  const jumpTo = (top: number) => {
+    // Con il menu aperto il body ha overflow nascosto: lo sblocco prima di spostarmi.
+    document.body.classList.remove("menu-open");
+    setMobileMenuOpen(false);
+    window.scrollTo({ top, left: 0, behavior: "instant" as ScrollBehavior });
+
+    // I trigger con scrub inseguono lo scroll con un ritardo: li porto subito a destinazione.
+    const ScrollTrigger = scrollTriggerApi.current;
+    if (ScrollTrigger) {
+      ScrollTrigger.update();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.getTween()?.progress(1));
+    }
+  };
+
+  const jumpToTop = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    jumpTo(0);
+  };
+
+  const jumpToSection = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const hash = event.currentTarget.getAttribute("href");
+    const target = hash?.startsWith("#") ? document.querySelector(hash) : null;
+    if (!target) return;
+
+    event.preventDefault();
+    jumpTo(window.scrollY + target.getBoundingClientRect().top);
+  };
+
   const toggleTimepiece = () => {
     setTimepieceActive((isActive) => {
       const nextState = !isActive;
@@ -67,6 +96,24 @@ export default function Home() {
       else timepieceAnimation.current?.reverse();
       return nextState;
     });
+  };
+
+  const moveFooterBrand = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.pointerType === "touch") return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+    event.currentTarget.style.setProperty("--footer-x", `${(x * 18).toFixed(2)}px`);
+    event.currentTarget.style.setProperty("--footer-y", `${(y * 12).toFixed(2)}px`);
+    event.currentTarget.style.setProperty("--footer-rotate-x", `${(-y * 3).toFixed(2)}deg`);
+    event.currentTarget.style.setProperty("--footer-rotate-y", `${(x * 3).toFixed(2)}deg`);
+  };
+
+  const resetFooterBrand = (event: React.PointerEvent<HTMLElement>) => {
+    event.currentTarget.style.setProperty("--footer-x", "0px");
+    event.currentTarget.style.setProperty("--footer-y", "0px");
+    event.currentTarget.style.setProperty("--footer-rotate-x", "0deg");
+    event.currentTarget.style.setProperty("--footer-rotate-y", "0deg");
   };
 
   useEffect(() => {
@@ -81,6 +128,7 @@ export default function Home() {
       if (cancelled) return;
 
       gsap.registerPlugin(ScrollTrigger);
+      scrollTriggerApi.current = ScrollTrigger;
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       const responsiveAnimations = gsap.matchMedia();
@@ -92,23 +140,43 @@ export default function Home() {
       }
 
       document.body.classList.add("is-loading");
-      const intro = gsap.timeline({
-        defaults: { ease: "power3.out" },
-        onComplete: () => {
-          document.body.classList.remove("is-loading");
-          setLoaderDone(true);
-          ScrollTrigger.refresh();
-        },
-      });
+      const loaderCounter = { value: 0 };
+      const finishLoader = () => {
+        document.body.classList.remove("is-loading");
+        setLoaderDone(true);
+        ScrollTrigger.refresh();
+      };
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       intro
-        .fromTo(".loader-mark", { scale: 0.82, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.9 })
-        .to(".loader-progress-fill", { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, 0.15)
-        .to(".loader-count", { opacity: 1, duration: 0.35 }, 0.3)
-        .to(loader.current, { yPercent: -100, duration: 1.05, ease: "power4.inOut" }, ">-0.1")
-        .from(".ring-intro-reveal", { y: 58, opacity: 0, duration: 1, stagger: 0.1 }, "-=0.5")
-        .from(".ring-assembly", { scale: 0.88, opacity: 0, duration: 1.35, ease: "power3.out" }, "-=1.12")
-        .from(".ring-orbit-frame", { scale: 0.68, rotate: -80, opacity: 0, duration: 1.3 }, "-=1.1");
+        .fromTo(".loader-aura", { scale: .35, opacity: 0 }, { scale: 1.12, opacity: .8, duration: 2.8, ease: "power2.inOut" }, 0)
+        .fromTo(".loader-ray", { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: .28, duration: 1.1, stagger: .08, ease: "power2.out" }, .08)
+        .fromTo(".loader-orbit--one", { scale: .58, rotate: -110, opacity: 0 }, { scale: 1, rotate: 250, opacity: .72, duration: 3.35, ease: "power2.inOut" }, .08)
+        .fromTo(".loader-orbit--two", { scale: .42, rotate: 130, opacity: 0 }, { scale: 1, rotate: -210, opacity: .5, duration: 3.15, ease: "power2.inOut" }, .18)
+        .fromTo(".loader-orbit--three", { scale: .72, rotate: -60, opacity: 0 }, { scale: 1, rotate: 170, opacity: .32, duration: 2.9, ease: "power2.inOut" }, .32)
+        .fromTo(".loader-particle", { scale: 0, opacity: 0 }, { scale: 1, opacity: .9, duration: .55, stagger: .1, ease: "back.out(2.4)" }, .52)
+        .fromTo(".loader-diamond-shell", { scale: .16, rotate: -135, opacity: 0, filter: "blur(10px)" }, { scale: 1, rotate: 0, opacity: 1, filter: "blur(0px)", duration: 1.18, ease: "power4.out" }, .64)
+        .fromTo(".loader-facet", { opacity: 0, scale: .5 }, { opacity: 1, scale: 1, duration: .42, stagger: .07 }, 1.04)
+        .fromTo(".loader-mark", { scale: .72, opacity: 0 }, { scale: 1, opacity: 1, duration: .86 }, 1.48)
+        .fromTo(".loader-kicker, .loader-name", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .58, stagger: .13 }, 1.78)
+        .to(".loader-progress-fill", { scaleX: 1, duration: 3.1, ease: "power2.inOut" }, .34)
+        .to(loaderCounter, {
+          value: 100,
+          duration: 3.1,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            const value = Math.round(loaderCounter.value);
+            const count = root.current?.querySelector<HTMLElement>(".loader-count");
+            const progress = root.current?.querySelector<HTMLElement>(".loader-progress");
+            if (count) count.textContent = value.toString().padStart(2, "0");
+            progress?.setAttribute("aria-valuenow", value.toString());
+          },
+        }, .34)
+        .to(".loader-diamond-flash", { scale: 2.8, opacity: .82, duration: .22, ease: "power2.out" }, 3.28)
+        .to(".loader-diamond-flash", { scale: 4.2, opacity: 0, duration: .42, ease: "power2.in" }, 3.5)
+        .to(".loader-stage, .loader-copy", { scale: .94, opacity: 0, duration: .42, ease: "power2.in" }, 3.48)
+        .to(loader.current, { yPercent: -100, duration: .9, ease: "power4.inOut" }, 3.58)
+        .call(finishLoader, [], 4.46);
 
       gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
         gsap.from(element, {
@@ -223,6 +291,7 @@ export default function Home() {
 
       cleanupAnimations = () => {
         timepieceAnimation.current = null;
+        scrollTriggerApi.current = null;
         responsiveAnimations.revert();
         context.revert();
       };
@@ -240,32 +309,67 @@ export default function Home() {
   return (
     <main ref={root}>
       {loaderDone ? null : (
-        <div className="loader" ref={loader} aria-label="Caricamento del sito">
-          <div className="loader-mark">
-            <img src="/images/logo_damiano.jpeg" alt="Damiano Oro e Gioielli" width="1075" height="937" decoding="async" />
+        <div className="loader" ref={loader} aria-label="Damiano Oro e Gioielli, caricamento del sito">
+          <div className="loader-ambient" aria-hidden="true">
+            <span className="loader-ray loader-ray--one" />
+            <span className="loader-ray loader-ray--two" />
+            <span className="loader-ray loader-ray--three" />
+            <span className="loader-ray loader-ray--four" />
           </div>
-          <p className="loader-count">Galatone · Atelier orafo</p>
-          <div className="loader-progress"><span className="loader-progress-fill" /></div>
+
+          <div className="loader-stage" aria-hidden="true">
+            <span className="loader-aura" />
+            <span className="loader-orbit loader-orbit--one" />
+            <span className="loader-orbit loader-orbit--two" />
+            <span className="loader-orbit loader-orbit--three" />
+            <span className="loader-particle loader-particle--one" />
+            <span className="loader-particle loader-particle--two" />
+            <span className="loader-particle loader-particle--three" />
+            <span className="loader-particle loader-particle--four" />
+            <span className="loader-particle loader-particle--five" />
+            <span className="loader-particle loader-particle--six" />
+            <div className="loader-diamond-shell">
+              <span className="loader-facet loader-facet--one" />
+              <span className="loader-facet loader-facet--two" />
+              <span className="loader-facet loader-facet--three" />
+              <span className="loader-facet loader-facet--four" />
+              <div className="loader-mark">
+                <img src="/images/logo-damiano.png" alt="" width="640" height="640" decoding="async" />
+              </div>
+            </div>
+            <span className="loader-diamond-flash" />
+          </div>
+
+          <div className="loader-copy">
+            <p className="loader-kicker">Galatone</p>
+            <p className="loader-name">Damiano</p>
+          </div>
+
+          <div className="loader-progress" role="progressbar" aria-label="Caricamento" aria-valuemin={0} aria-valuemax={100} aria-valuenow={0}>
+            <span className="loader-count">00</span>
+            <span className="loader-progress-track"><span className="loader-progress-fill" /></span>
+            <span className="loader-progress-end">100</span>
+          </div>
         </div>
       )}
 
       <header ref={header} className={`site-header${mobileMenuOpen ? " menu-is-open" : ""}`}>
-        <a className="wordmark" href="#top" aria-label="Damiano Oro e Gioielli, torna all'inizio">
+        <a className="wordmark" href="#top" onClick={jumpToTop} aria-label="Damiano Oro e Gioielli, torna all'inizio">
           <img
             className="header-logo"
-            src="/images/logo_damiano.jpeg"
+            src="/images/logo-damiano.png"
             alt=""
-            width="1075"
-            height="937"
+            width="640"
+            height="640"
             decoding="async"
           />
           <span>Damiano</span>
           <small>Oro e Gioielli</small>
         </a>
         <nav className="desktop-navigation" aria-label="Navigazione principale">
-          <a href="#atelier">Atelier</a>
-          <a href="#gioielli">Gioielli</a>
-          <a href="#contatti">Contatti</a>
+          <a href="#atelier" onClick={jumpToSection}>Atelier</a>
+          <a href="#gioielli" onClick={jumpToSection}>Gioielli</a>
+          <a href="#contatti" onClick={jumpToSection}>Contatti</a>
         </nav>
         <a className="header-cta" href="tel:+393930436460">Parliamone</a>
         <button
@@ -297,9 +401,9 @@ export default function Home() {
         aria-hidden={!mobileMenuOpen}
       >
         <p>Menu</p>
-        <a href="#atelier" onClick={closeMobileMenu}><span>01</span> Atelier</a>
-        <a href="#gioielli" onClick={closeMobileMenu}><span>02</span> Gioielli</a>
-        <a href="#contatti" onClick={closeMobileMenu}><span>03</span> Contatti</a>
+        <a href="#atelier" onClick={jumpToSection}><span>01</span> Atelier</a>
+        <a href="#gioielli" onClick={jumpToSection}><span>02</span> Gioielli</a>
+        <a href="#contatti" onClick={jumpToSection}><span>03</span> Contatti</a>
         <a className="mobile-call" href="tel:+393930436460" onClick={closeMobileMenu}>Chiama l&apos;atelier <span>↗</span></a>
       </nav>
 
@@ -373,7 +477,6 @@ export default function Home() {
 
           <div className="hero opening-hero" id="intro">
             <div className="hero-copy">
-              <p className="eyebrow">Atelier orafo · Galatone</p>
               <h1>Il tempo<br />diventa <em>prezioso.</em></h1>
               <p className="hero-intro">
                 Oro, argento, orologi e oggetti preziosi per la casa, scelti e lavorati con cura.
@@ -387,10 +490,6 @@ export default function Home() {
               <div className="edition-note">01 — Luce, materia, gesto</div>
             </div>
 
-            <div className="hero-index" aria-hidden="true">
-              <span>40°08&apos;53.5&quot;N</span>
-              <span>18°04&apos;11.3&quot;E</span>
-            </div>
             <a className="scroll-cue" href="#manifesto" aria-label="Scorri alla sezione successiva"><span /></a>
           </div>
         </div>
@@ -399,20 +498,17 @@ export default function Home() {
       <section className="manifesto section-pad" id="manifesto">
         <div className="section-number" data-reveal>02 / 09</div>
         <div className="manifesto-head">
-          <p className="eyebrow dark" data-reveal>Ogni dettaglio ha una storia</p>
           <h2 data-reveal>Dove la materia<br />incontra il <em>gesto.</em></h2>
         </div>
         <div className="manifesto-grid">
           <figure className="image-card image-card--red" data-reveal>
             <div className="image-shell"><img data-parallax src="/images/image00009.jpg" alt="Bracciale in oro indossato" width="4000" height="6000" loading="lazy" decoding="async" /></div>
-            <figcaption>La luce che accompagna</figcaption>
           </figure>
           <p className="manifesto-copy" data-reveal>
             Scegliere un gioiello è riconoscersi in un dettaglio. Nel nostro atelier ogni forma nasce dall&apos;ascolto, dalla precisione e dal tempo dedicato alle cose fatte bene.
           </p>
           <figure className="image-card image-card--still" data-reveal>
             <div className="image-shell"><img data-parallax src="/images/image00004.jpg" alt="Selezione di gioielli in oro" width="1440" height="1920" loading="lazy" decoding="async" /></div>
-            <figcaption>Materia da interpretare</figcaption>
           </figure>
         </div>
       </section>
@@ -469,10 +565,9 @@ export default function Home() {
       <section className="atelier" id="atelier">
         <div className="atelier-intro section-pad">
           <div className="section-number light" data-reveal>04 / 09</div>
-          <p className="eyebrow" data-reveal>Dentro l&apos;atelier</p>
-          <h2 data-reveal>La cura non si vede.<br /><em>Si riconosce.</em></h2>
+          <h2 data-reveal>Il gesto resta umano.<br /><em>La precisione evolve.</em></h2>
           <p className="atelier-copy" data-reveal>
-            Esperienza artigiana e tecnologia di precisione si incontrano nella lavorazione di gioielli in oro e argento, dal primo gesto all&apos;ultima finitura.
+            Ogni gioiello nasce al banco, tra mani esperte, lime, bulini e saldature. Microscopio e strumenti digitali affiancano il mestiere quando serve più controllo, senza sostituire l&apos;occhio e la mano dell&apos;orafo.
           </p>
         </div>
 
@@ -490,7 +585,6 @@ export default function Home() {
       <section className="collections section-pad" id="gioielli">
         <div className="collections-head">
           <div className="section-number" data-reveal>06 / 09</div>
-          <p className="eyebrow dark" data-reveal>Gioielli, tempo, casa</p>
           <h2 data-reveal>Forme che<br /><em>restano.</em></h2>
         </div>
         <div className="collection-list">
@@ -555,19 +649,21 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
-        <a className="wordmark footer-mark" href="#top"><span>Damiano</span><small>Oro e Gioielli</small></a>
+      <footer onPointerMove={moveFooterBrand} onPointerLeave={resetFooterBrand}>
+        <a className="footer-brand" href="#top" onClick={jumpToTop} aria-label="Damiano Oro e Gioielli, torna all'inizio">
+          <span className="footer-brand-name">Damiano</span>
+          <span className="footer-brand-signature">Oro e Gioielli</span>
+        </a>
         <div className="footer-info">
-          <p>Atelier orafo e gioielleria a Galatone.</p>
+          <a className="site-credit" href="https://dimana.it" target="_blank" rel="noreferrer">
+            Creato dal collettivo <strong>DIMANA - DIGITAL CREATIONS</strong>
+          </a>
           <nav aria-label="Documenti legali">
             <a href="/privacy-policy">Privacy Policy</a>
             <a href="/cookie-policy">Cookie Policy</a>
           </nav>
-          <a className="site-credit" href="https://dimana.it" target="_blank" rel="noreferrer">
-            Creato dal team di <strong>dimana.digitalcreations</strong>
-          </a>
         </div>
-        <a href="#top">Torna su ↑</a>
+        <a className="footer-top" href="#top" onClick={jumpToTop}>Torna su ↑</a>
       </footer>
     </main>
   );

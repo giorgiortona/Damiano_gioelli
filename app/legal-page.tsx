@@ -4,10 +4,11 @@ type LegalPageProps = {
   eyebrow: string;
   title: string;
   intro: string;
+  updated?: string;
   children: ReactNode;
 };
 
-export function LegalPage({ eyebrow, title, intro, children }: LegalPageProps) {
+export function LegalPage({ eyebrow, title, intro, updated = "30 agosto 2026", children }: LegalPageProps) {
   return (
     <main className="legal-page">
       <header className="legal-header">
@@ -22,8 +23,12 @@ export function LegalPage({ eyebrow, title, intro, children }: LegalPageProps) {
         <p className="legal-eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="legal-intro">{intro}</p>
-        <p className="legal-updated">Ultimo aggiornamento: 30 agosto 2026</p>
+        <p className="legal-updated">Ultimo aggiornamento: {updated}</p>
         <div className="legal-content">{children}</div>
+        <a className="legal-return" href="/">
+          Torna al sito
+          <span aria-hidden="true">↗</span>
+        </a>
       </article>
 
       <div className="legal-footer">
