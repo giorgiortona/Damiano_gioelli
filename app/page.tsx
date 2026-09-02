@@ -188,6 +188,43 @@ export default function Home() {
         });
       });
 
+      gsap.utils.toArray<HTMLElement>(".editorial-frame").forEach((frame, index) => {
+        const media = frame.querySelector<HTMLElement>(".editorial-media");
+        const image = frame.querySelector<HTMLImageElement>("img");
+        if (!media || !image) return;
+
+        gsap.fromTo(
+          media,
+          { clipPath: index % 2 === 0 ? "inset(18% 0 0 0)" : "inset(0 0 0 18%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1.35,
+            ease: "power3.out",
+            scrollTrigger: { trigger: frame, start: "top 84%", once: true },
+          },
+        );
+
+        gsap.fromTo(
+          image,
+          { scale: 1.13 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 1.15 },
+          },
+        );
+      });
+
+      gsap.fromTo(
+        ".editorial-thread",
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: { trigger: ".editorial-gallery", start: "top 78%", end: "bottom 24%", scrub: 1 },
+        },
+      );
+
       const composeRing = (timeline: ReturnType<typeof gsap.timeline>) => {
         timeline
           .fromTo(".ring-stage-glow", { scale: .62, opacity: .08 }, { scale: 1.08, opacity: .82, duration: 1.9, ease: "power2.inOut" }, 0)
@@ -579,6 +616,64 @@ export default function Home() {
             <figure><img src="/images/image00006.jpg" alt="Lavorazione orafa al microscopio" width="1639" height="2048" loading="lazy" decoding="async" /><figcaption>Precisione</figcaption></figure>
             <figure><img src="/images/image00007.jpg" alt="Lavorazione manuale di un gioiello" width="1639" height="2048" loading="lazy" decoding="async" /><figcaption>Gesto</figcaption></figure>
           </div>
+        </div>
+      </section>
+
+      <section className="editorial" aria-labelledby="editorial-title">
+        <div className="editorial-heading section-pad">
+          <div className="section-number light" data-reveal>05 / 09</div>
+          <div className="editorial-heading-grid">
+            <h2 id="editorial-title" data-reveal>Ogni prezioso<br />ha una <em>storia.</em></h2>
+            <p data-reveal>
+              Dalla scelta alla cura, ogni dettaglio è pensato per essere indossato, ricordato e tramandato.
+            </p>
+          </div>
+        </div>
+
+        <div className="editorial-gallery">
+          <span className="editorial-thread" aria-hidden="true" />
+
+          <figure className="editorial-frame editorial-frame--jewels">
+            <div className="editorial-media">
+              <img src="/images/editorial-gioielli-oro.webp" alt="Collane e anelli in oro esposti su tessuto prezioso" width="1440" height="1918" loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>01</span> Selezione</figcaption>
+          </figure>
+
+          <figure className="editorial-frame editorial-frame--wheat">
+            <div className="editorial-media">
+              <img src="/images/editorial-spiga-anello.webp" alt="Anello con pietre preziose posato su una spiga" width="1536" height="2048" loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>02</span> Promessa</figcaption>
+          </figure>
+
+          <figure className="editorial-frame editorial-frame--inspection">
+            <div className="editorial-media">
+              <img src="/images/editorial-controllo-anello.webp" alt="Controllo di un anello artigianale con lente da gioielliere" width="1440" height="1800" loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>03</span> Cura</figcaption>
+          </figure>
+
+          <figure className="editorial-frame editorial-frame--sweet">
+            <div className="editorial-media">
+              <img src="/images/editorial-sweet-luxury.webp" alt="Composizione Sweet Luxury con anelli e diamanti" width="1637" height="2048" loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>04</span> Dolce lusso</figcaption>
+          </figure>
+
+          <figure className="editorial-frame editorial-frame--watch">
+            <div className="editorial-media">
+              <img src="/images/editorial-orologio-seiko.webp" alt="Orologio vintage Seiko con quadrante bordeaux" width="1440" height="1920" loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>05</span> Tempo</figcaption>
+          </figure>
+
+          <figure className="editorial-frame editorial-frame--rings">
+            <div className="editorial-media">
+              <img src="/images/editorial-anelli-colorati.webp" alt="Anelli con pietre preziose colorate indossati" width="1440" height="1800" loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span>06</span> Colore</figcaption>
+          </figure>
         </div>
       </section>
 

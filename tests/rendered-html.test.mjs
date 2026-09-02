@@ -35,11 +35,18 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /Oro e argento/);
   assert.match(html, /Lavorazioni orafe/);
   assert.match(html, /Casa e cornici/);
+  assert.match(html, /Ogni prezioso/);
+  assert.match(html, /editorial-gioielli-oro\.webp/);
+  assert.match(html, /editorial-spiga-anello\.webp/);
+  assert.match(html, /editorial-controllo-anello\.webp/);
+  assert.match(html, /editorial-orologio-seiko\.webp/);
+  assert.match(html, /editorial-sweet-luxury\.webp/);
+  assert.match(html, /editorial-anelli-colorati\.webp/);
   assert.match(html, /Via Camillo Benso Conte di Cavour, 33/);
   assert.match(html, /href="\/privacy-policy"/);
   assert.match(html, /href="\/cookie-policy"/);
   assert.match(html, /href="https:\/\/dimana\.it"/);
-  assert.match(html, /dimana\.digitalcreations/);
+  assert.match(html, /DIMANA - DIGITAL CREATIONS/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
@@ -58,8 +65,9 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /ring-complete/);
   assert.match(page, /opening-hero/);
   assert.match(page, /atelierTrack\.scrollWidth - atelierGallery\.clientWidth/);
-  assert.match(page, /logo_damiano\.jpeg/);
+  assert.match(page, /logo-damiano\.png/);
   assert.match(page, /className="header-logo"/);
+  assert.match(page, /editorial-thread/);
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(layout, /Damiano Oro e Gioielli/);
   assert.match(styles, /\.site-header\s*\{[^}]*position:\s*fixed/s);
