@@ -42,6 +42,9 @@ test("server-renders the Damiano atelier experience", async () => {
   assert.match(html, /editorial-orologio-seiko\.webp/);
   assert.match(html, /editorial-sweet-luxury\.webp/);
   assert.match(html, /editorial-anelli-colorati\.webp/);
+  assert.match(html, /image00005\.jpg/);
+  assert.match(html, /Parole che/);
+  assert.match(html, /Professionalità/);
   assert.match(html, /Via Camillo Benso Conte di Cavour, 33/);
   assert.match(html, /href="\/privacy-policy"/);
   assert.match(html, /href="\/cookie-policy"/);
@@ -67,7 +70,8 @@ test("removes the disposable starter preview", async () => {
   assert.match(page, /atelierTrack\.scrollWidth - atelierGallery\.clientWidth/);
   assert.match(page, /logo-damiano\.png/);
   assert.match(page, /className="header-logo"/);
-  assert.match(page, /editorial-thread/);
+  assert.match(page, /editorialTrack\.scrollWidth - window\.innerWidth/);
+  assert.match(page, /editorial-progress-fill/);
   assert.match(page, /hamilton-jazzmaster-open-heart\.webp/);
   assert.match(layout, /Damiano Oro e Gioielli/);
   assert.match(styles, /\.site-header\s*\{[^}]*position:\s*fixed/s);

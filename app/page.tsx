@@ -188,43 +188,6 @@ export default function Home() {
         });
       });
 
-      gsap.utils.toArray<HTMLElement>(".editorial-frame").forEach((frame, index) => {
-        const media = frame.querySelector<HTMLElement>(".editorial-media");
-        const image = frame.querySelector<HTMLImageElement>("img");
-        if (!media || !image) return;
-
-        gsap.fromTo(
-          media,
-          { clipPath: index % 2 === 0 ? "inset(18% 0 0 0)" : "inset(0 0 0 18%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.35,
-            ease: "power3.out",
-            scrollTrigger: { trigger: frame, start: "top 84%", once: true },
-          },
-        );
-
-        gsap.fromTo(
-          image,
-          { scale: 1.13 },
-          {
-            scale: 1,
-            ease: "none",
-            scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 1.15 },
-          },
-        );
-      });
-
-      gsap.fromTo(
-        ".editorial-thread",
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: "none",
-          scrollTrigger: { trigger: ".editorial-gallery", start: "top 78%", end: "bottom 24%", scrub: 1 },
-        },
-      );
-
       const composeRing = (timeline: ReturnType<typeof gsap.timeline>) => {
         timeline
           .fromTo(".ring-stage-glow", { scale: .62, opacity: .08 }, { scale: 1.08, opacity: .82, duration: 1.9, ease: "power2.inOut" }, 0)
@@ -314,11 +277,94 @@ export default function Home() {
             },
           });
         }
+
+        const editorialGallery = root.current?.querySelector<HTMLElement>(".editorial-gallery");
+        const editorialTrack = root.current?.querySelector<HTMLElement>(".editorial-track");
+        const editorialProgress = root.current?.querySelector<HTMLElement>(".editorial-progress-fill");
+
+        if (editorialGallery && editorialTrack) {
+          const editorialDuration = () => `+=${Math.max(window.innerWidth * 2, editorialTrack.scrollWidth - window.innerWidth + window.innerWidth * .7)}`;
+          const editorialTween = gsap.to(editorialTrack, {
+            x: () => -Math.max(0, editorialTrack.scrollWidth - window.innerWidth),
+            ease: "none",
+            scrollTrigger: {
+              trigger: editorialGallery,
+              start: "top top",
+              end: editorialDuration,
+              pin: true,
+              scrub: 1.15,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          if (editorialProgress) {
+            gsap.fromTo(editorialProgress, { scaleX: 0 }, {
+              scaleX: 1,
+              ease: "none",
+              scrollTrigger: { trigger: editorialGallery, start: "top top", end: editorialDuration, scrub: 1 },
+            });
+          }
+
+          gsap.utils.toArray<HTMLElement>(".editorial-frame").forEach((frame) => {
+            const image = frame.querySelector<HTMLImageElement>("img");
+            gsap.fromTo(frame, { scale: .84, opacity: .45, rotate: -1.5 }, {
+              scale: 1,
+              opacity: 1,
+              rotate: 0,
+              ease: "none",
+              scrollTrigger: {
+                trigger: frame,
+                containerAnimation: editorialTween,
+                start: "left 92%",
+                end: "center 72%",
+                scrub: true,
+              },
+            });
+
+            if (image) {
+              gsap.fromTo(image, { xPercent: -5, scale: 1.14 }, {
+                xPercent: 5,
+                scale: 1.04,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: frame,
+                  containerAnimation: editorialTween,
+                  start: "left right",
+                  end: "right left",
+                  scrub: true,
+                },
+              });
+            }
+          });
+        }
       });
 
       responsiveAnimations.add("(max-width: 900px)", () => {
         const mobileTimeline = composeTimepiece(gsap.timeline({ paused: true }));
         timepieceAnimation.current = mobileTimeline;
+
+        gsap.utils.toArray<HTMLElement>(".editorial-frame").forEach((frame, index) => {
+          const media = frame.querySelector<HTMLElement>(".editorial-media");
+          const image = frame.querySelector<HTMLImageElement>("img");
+          if (!media || !image) return;
+
+          gsap.fromTo(media, {
+            clipPath: index % 2 === 0 ? "inset(16% 0 0 0)" : "inset(0 16% 0 0)",
+          }, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: { trigger: frame, start: "top 86%", once: true },
+          });
+
+          gsap.fromTo(image, { yPercent: -4, scale: 1.08 }, {
+            yPercent: 4,
+            scale: 1.02,
+            ease: "none",
+            scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 1 },
+          });
+        });
 
         return () => {
           if (timepieceAnimation.current === mobileTimeline) timepieceAnimation.current = null;
@@ -535,17 +581,21 @@ export default function Home() {
       <section className="manifesto section-pad" id="manifesto">
         <div className="section-number" data-reveal>02 / 09</div>
         <div className="manifesto-head">
+          <p className="manifesto-kicker" data-reveal>Materia · Luce · Identità</p>
           <h2 data-reveal>Dove la materia<br />incontra il <em>gesto.</em></h2>
         </div>
         <div className="manifesto-grid">
           <figure className="image-card image-card--red" data-reveal>
             <div className="image-shell"><img data-parallax src="/images/image00009.jpg" alt="Bracciale in oro indossato" width="4000" height="6000" loading="lazy" decoding="async" /></div>
+            <figcaption>01 — Indossare</figcaption>
           </figure>
-          <p className="manifesto-copy" data-reveal>
-            Scegliere un gioiello è riconoscersi in un dettaglio. Nel nostro atelier ogni forma nasce dall&apos;ascolto, dalla precisione e dal tempo dedicato alle cose fatte bene.
-          </p>
+          <div className="manifesto-copy" data-reveal>
+            <span>La nostra idea di prezioso</span>
+            <p>Scegliere un gioiello è riconoscersi in un dettaglio. Ogni forma nasce dall&apos;ascolto e dal tempo dedicato alle cose fatte bene.</p>
+          </div>
           <figure className="image-card image-card--still" data-reveal>
             <div className="image-shell"><img data-parallax src="/images/image00004.jpg" alt="Selezione di gioielli in oro" width="1440" height="1920" loading="lazy" decoding="async" /></div>
+            <figcaption>02 — Trasformare</figcaption>
           </figure>
         </div>
       </section>
@@ -631,49 +681,51 @@ export default function Home() {
         </div>
 
         <div className="editorial-gallery">
-          <span className="editorial-thread" aria-hidden="true" />
+          <div className="editorial-track">
+            <figure className="editorial-frame editorial-frame--jewels">
+              <div className="editorial-media">
+                <img src="/images/editorial-gioielli-oro.webp" alt="Collane e anelli in oro esposti su tessuto prezioso" width="1440" height="1918" loading="lazy" decoding="async" />
+              </div>
+              <figcaption><span>01</span> Selezione</figcaption>
+            </figure>
 
-          <figure className="editorial-frame editorial-frame--jewels">
-            <div className="editorial-media">
-              <img src="/images/editorial-gioielli-oro.webp" alt="Collane e anelli in oro esposti su tessuto prezioso" width="1440" height="1918" loading="lazy" decoding="async" />
-            </div>
-            <figcaption><span>01</span> Selezione</figcaption>
-          </figure>
+            <figure className="editorial-frame editorial-frame--wheat">
+              <div className="editorial-media">
+                <img src="/images/editorial-spiga-anello.webp" alt="Anello con pietre preziose posato su una spiga" width="1536" height="2048" loading="lazy" decoding="async" />
+              </div>
+              <figcaption><span>02</span> Promessa</figcaption>
+            </figure>
 
-          <figure className="editorial-frame editorial-frame--wheat">
-            <div className="editorial-media">
-              <img src="/images/editorial-spiga-anello.webp" alt="Anello con pietre preziose posato su una spiga" width="1536" height="2048" loading="lazy" decoding="async" />
-            </div>
-            <figcaption><span>02</span> Promessa</figcaption>
-          </figure>
+            <figure className="editorial-frame editorial-frame--inspection">
+              <div className="editorial-media">
+                <img src="/images/editorial-controllo-anello.webp" alt="Controllo di un anello artigianale con lente da gioielliere" width="1440" height="1800" loading="lazy" decoding="async" />
+              </div>
+              <figcaption><span>03</span> Cura</figcaption>
+            </figure>
 
-          <figure className="editorial-frame editorial-frame--inspection">
-            <div className="editorial-media">
-              <img src="/images/editorial-controllo-anello.webp" alt="Controllo di un anello artigianale con lente da gioielliere" width="1440" height="1800" loading="lazy" decoding="async" />
-            </div>
-            <figcaption><span>03</span> Cura</figcaption>
-          </figure>
+            <figure className="editorial-frame editorial-frame--sweet">
+              <div className="editorial-media">
+                <img src="/images/editorial-sweet-luxury.webp" alt="Composizione Sweet Luxury con anelli e diamanti" width="1637" height="2048" loading="lazy" decoding="async" />
+              </div>
+              <figcaption><span>04</span> Dolce lusso</figcaption>
+            </figure>
 
-          <figure className="editorial-frame editorial-frame--sweet">
-            <div className="editorial-media">
-              <img src="/images/editorial-sweet-luxury.webp" alt="Composizione Sweet Luxury con anelli e diamanti" width="1637" height="2048" loading="lazy" decoding="async" />
-            </div>
-            <figcaption><span>04</span> Dolce lusso</figcaption>
-          </figure>
+            <figure className="editorial-frame editorial-frame--watch">
+              <div className="editorial-media">
+                <img src="/images/editorial-orologio-seiko.webp" alt="Orologio vintage Seiko con quadrante bordeaux" width="1440" height="1920" loading="lazy" decoding="async" />
+              </div>
+              <figcaption><span>05</span> Tempo</figcaption>
+            </figure>
 
-          <figure className="editorial-frame editorial-frame--watch">
-            <div className="editorial-media">
-              <img src="/images/editorial-orologio-seiko.webp" alt="Orologio vintage Seiko con quadrante bordeaux" width="1440" height="1920" loading="lazy" decoding="async" />
-            </div>
-            <figcaption><span>05</span> Tempo</figcaption>
-          </figure>
+            <figure className="editorial-frame editorial-frame--rings">
+              <div className="editorial-media">
+                <img src="/images/editorial-anelli-colorati.webp" alt="Anelli con pietre preziose colorate indossati" width="1440" height="1800" loading="lazy" decoding="async" />
+              </div>
+              <figcaption><span>06</span> Colore</figcaption>
+            </figure>
+          </div>
 
-          <figure className="editorial-frame editorial-frame--rings">
-            <div className="editorial-media">
-              <img src="/images/editorial-anelli-colorati.webp" alt="Anelli con pietre preziose colorate indossati" width="1440" height="1800" loading="lazy" decoding="async" />
-            </div>
-            <figcaption><span>06</span> Colore</figcaption>
-          </figure>
+          <div className="editorial-progress" aria-hidden="true"><span className="editorial-progress-fill" /></div>
         </div>
       </section>
 
@@ -681,45 +733,68 @@ export default function Home() {
         <div className="collections-head">
           <div className="section-number" data-reveal>06 / 09</div>
           <h2 data-reveal>Forme che<br /><em>restano.</em></h2>
+          <p className="collections-intro" data-reveal>Quattro mondi, un&apos;unica idea di eleganza: scegliere bene, custodire a lungo.</p>
         </div>
         <div className="collection-list">
           <article data-reveal>
-            <span>01</span>
+            <div className="collection-meta"><span>01</span><i aria-hidden="true" /></div>
             <h3>Oro e argento</h3>
             <p>Gioielli scelti per luce, equilibrio e carattere.</p>
+            <small>Materia preziosa</small>
           </article>
           <article data-reveal>
-            <span>02</span>
+            <div className="collection-meta"><span>02</span><i aria-hidden="true" /></div>
             <h3>Lavorazioni orafe</h3>
             <p>Precisione artigiana dedicata a ogni gioiello.</p>
+            <small>Mani esperte</small>
           </article>
           <article data-reveal>
-            <span>03</span>
+            <div className="collection-meta"><span>03</span><i aria-hidden="true" /></div>
             <h3>Orologi di pregio</h3>
             <p>Il tempo, interpretato con stile e precisione.</p>
+            <small>Meccanica e stile</small>
           </article>
           <article data-reveal>
-            <span>04</span>
+            <div className="collection-meta"><span>04</span><i aria-hidden="true" /></div>
             <h3>Casa e cornici</h3>
             <p>Oggetti preziosi, cornici e dettagli d&apos;arredo eleganti.</p>
+            <small>Abitare la bellezza</small>
           </article>
         </div>
       </section>
 
-      <section className="quote-section">
-        <div className="rating" data-reveal>
-          <strong>4,7</strong>
-          <span>★★★★★<br />26 recensioni Google</span>
+      <section className="quote-section" aria-labelledby="reviews-title">
+        <span className="reviews-orbit" aria-hidden="true" />
+        <div className="section-number light" data-reveal>07 / 09</div>
+        <div className="reviews-grid">
+          <div className="reviews-heading">
+            <p className="eyebrow" data-reveal>La voce dei clienti</p>
+            <h2 id="reviews-title" data-reveal>Parole che<br /><em>restano.</em></h2>
+            <div className="rating" data-reveal>
+              <strong>4,7</strong>
+              <span>su 5 · 26 recensioni Google</span>
+            </div>
+          </div>
+
+          <article className="review-card" data-reveal>
+            <div className="review-card-head"><span>★★★★★</span><small>Recensione Google</small></div>
+            <blockquote>
+              “Personale qualificato e disponibile, gentilezza e grande professionalità.”
+            </blockquote>
+            <div className="review-author"><span>Laura M.</span><small>Cliente dell&apos;atelier</small></div>
+          </article>
         </div>
-        <blockquote data-reveal>
-          “Personale qualificato e disponibile, gentilezza e grande professionalità.”
-          <cite>— Laura M.</cite>
-        </blockquote>
-        <a className="text-link dark-link" href={mapsUrl} target="_blank" rel="noreferrer" data-reveal>Leggi le recensioni <span>↗</span></a>
+
+        <div className="reviews-footer" data-reveal>
+          <div className="review-values" aria-label="Qualità apprezzate dai clienti">
+            <span>Disponibilità</span><span>Gentilezza</span><span>Professionalità</span>
+          </div>
+          <a className="review-link" href={mapsUrl} target="_blank" rel="noreferrer">Leggi tutte le recensioni <span>↗</span></a>
+        </div>
       </section>
 
       <section className="contact" id="contatti">
-        <div className="contact-image"><img data-parallax src="/images/image00009.jpg" alt="Bracciale in oro su fondo rosso" width="4000" height="6000" loading="lazy" decoding="async" /></div>
+        <div className="contact-image"><img data-parallax src="/images/image00005.jpg" alt="Collana in oro con pietre azzurre esposta in atelier" width="1440" height="1920" loading="lazy" decoding="async" /></div>
         <div className="contact-panel">
           <p className="eyebrow" data-reveal>Vieni a trovarci</p>
           <h2 data-reveal>Inizia da<br />un <em>incontro.</em></h2>
